@@ -1,0 +1,33 @@
+{
+  "revision": "r1",
+  "result": "passed",
+  "runtime": "official vela-watch-5.0 emulator; not REDMI Watch 5 firmware",
+  "screen": [
+    432,
+    514
+  ],
+  "emulatorRAMMB": 128,
+  "packageBytes": 9980993,
+  "packageSha256": "df4f4d354ec54ca9e6c806ebd5a8daa657876276b93aff07d73b421d5a6c0149",
+  "installationType": "reinstallation over original 0.1.0; existing saves retained",
+  "installationResponse": "onInstallResult: com.codex.stella.rw5(success 0)",
+  "checks": [
+    "exact signed r1 file installed and launched",
+    "title and icon resources loaded",
+    "original save slots 1 and 30 loaded",
+    "slot 30 saved again",
+    "first chapter page and pagination return refreshed",
+    "transparent portrait displayed",
+    "menu chapter skip reached next chapter",
+    "CG image and grouped difference displayed",
+    "no app or image errors during this run"
+  ],
+  "fullGameplayBaseline": {
+    "report": "original-v010-report.json",
+    "sha256": "32c8b6163ab6414fee4289719e4fc47d7c6782da8f3b61b5a92459d96d0f3cad",
+    "retainedByIdenticalGameContents": true,
+    "coldBootRepeatedForR1": false
+  },
+  "physicalInstallationTested": false,
+  "physicalInstallationPassed": null
+}

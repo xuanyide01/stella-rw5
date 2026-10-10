@@ -1,0 +1,213 @@
+[
+  {
+    "file": "星之终途-RW5-0.1.0.bin",
+    "bytes": 9980982,
+    "lengthMod16": 6,
+    "zipCommentBytes": 145,
+    "entries": 945,
+    "maximumFilenameBytes": 40,
+    "compressionMethods": [
+      0,
+      8
+    ],
+    "manifestFiles": [
+      "manifest.json"
+    ],
+    "manifest.json": {
+      "package": "com.codex.stella.rw5",
+      "versionName": "0.1.0",
+      "versionCode": 1,
+      "minAPILevel": 1,
+      "minPlatformVersion": 1000,
+      "deviceTypeList": [
+        "watch"
+      ],
+      "features": [
+        {
+          "name": "system.storage"
+        },
+        {
+          "name": "system.file"
+        },
+        {
+          "name": "system.prompt"
+        }
+      ]
+    },
+    "manifest-watch.json": null
+  },
+  {
+    "file": "夏日口袋-RW5-0.1.7.bin",
+    "bytes": 24641553,
+    "lengthMod16": 1,
+    "zipCommentBytes": 151,
+    "entries": 2389,
+    "maximumFilenameBytes": 35,
+    "compressionMethods": [
+      0,
+      8
+    ],
+    "manifestFiles": [
+      "manifest-watch.json",
+      "manifest.json"
+    ],
+    "manifest.json": {
+      "package": "com.codex.summer.rw5",
+      "versionName": "0.1.7",
+      "versionCode": 8,
+      "minAPILevel": 1,
+      "minPlatformVersion": 1000,
+      "deviceTypeList": [
+        "watch"
+      ],
+      "features": [
+        {
+          "name": "system.storage"
+        },
+        {
+          "name": "system.file"
+        },
+        {
+          "name": "system.prompt"
+        }
+      ]
+    },
+    "manifest-watch.json": {
+      "package": "com.codex.summer.rw5",
+      "versionName": "0.1.7",
+      "versionCode": 8,
+      "minAPILevel": 1,
+      "minPlatformVersion": 1000,
+      "deviceTypeList": [
+        "watch"
+      ],
+      "features": [
+        {
+          "name": "system.storage"
+        },
+        {
+          "name": "system.file"
+        },
+        {
+          "name": "system.prompt"
+        }
+      ]
+    }
+  },
+  {
+    "file": "CLANNAD-RW5-0.1.3.bin",
+    "bytes": 24613132,
+    "lengthMod16": 12,
+    "zipCommentBytes": 145,
+    "entries": 1752,
+    "maximumFilenameBytes": 29,
+    "compressionMethods": [
+      0,
+      8
+    ],
+    "manifestFiles": [
+      "manifest-watch.json",
+      "manifest.json"
+    ],
+    "manifest.json": {
+      "package": "com.codex.clannad.rw5",
+      "versionName": "0.1.3",
+      "versionCode": 6,
+      "minAPILevel": 1,
+      "minPlatformVersion": 1000,
+      "deviceTypeList": [
+        "watch"
+      ],
+      "features": [
+        {
+          "name": "system.storage"
+        },
+        {
+          "name": "system.file"
+        },
+        {
+          "name": "system.prompt"
+        }
+      ]
+    },
+    "manifest-watch.json": {
+      "package": "com.codex.clannad.rw5",
+      "versionName": "0.1.3",
+      "versionCode": 6,
+      "minAPILevel": 1,
+      "minPlatformVersion": 1000,
+      "deviceTypeList": [
+        "watch"
+      ],
+      "features": [
+        {
+          "name": "system.storage"
+        },
+        {
+          "name": "system.file"
+        },
+        {
+          "name": "system.prompt"
+        }
+      ]
+    }
+  },
+  {
+    "file": "纸上的魔法使-RW5-0.1.1.bin",
+    "bytes": 21429431,
+    "lengthMod16": 7,
+    "zipCommentBytes": 145,
+    "entries": 1053,
+    "maximumFilenameBytes": 38,
+    "compressionMethods": [
+      0,
+      8
+    ],
+    "manifestFiles": [
+      "manifest-watch.json",
+      "manifest.json"
+    ],
+    "manifest.json": {
+      "package": "com.codex.paper.rw5",
+      "versionName": "0.1.1",
+      "versionCode": 2,
+      "minAPILevel": 1,
+      "minPlatformVersion": 1000,
+      "deviceTypeList": [
+        "watch"
+      ],
+      "features": [
+        {
+          "name": "system.storage"
+        },
+        {
+          "name": "system.file"
+        },
+        {
+          "name": "system.prompt"
+        }
+      ]
+    },
+    "manifest-watch.json": {
+      "package": "com.codex.paper.rw5",
+      "versionName": "0.1.1",
+      "versionCode": 2,
+      "minAPILevel": 1,
+      "minPlatformVersion": 1000,
+      "deviceTypeList": [
+        "watch"
+      ],
+      "features": [
+        {
+          "name": "system.storage"
+        },
+        {
+          "name": "system.file"
+        },
+        {
+          "name": "system.prompt"
+        }
+      ]
+    }
+  }
+]

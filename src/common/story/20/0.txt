@@ -1,0 +1,1 @@
+[{"background":"b_eab636eb3d80c8c38ef9","bodies":[],"op":"text","speaker":"","text":"（原作片尾动画在手表图文版中省略，点击下一句继续尾声。）"},{"op":"jumpScene","scene":21,"to":0}]

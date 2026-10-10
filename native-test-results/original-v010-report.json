@@ -1,0 +1,25 @@
+{
+  "game": "星之终途",
+  "version": "0.1.0",
+  "result": "passed",
+  "runtime": "official vela-watch-5.0 emulator; not REDMI Watch 5 firmware",
+  "screen": [
+    432,
+    514
+  ],
+  "emulatorRAMMB": 128,
+  "packageBytes": 9980982,
+  "maximumPackageBytes": 15000000,
+  "packageSha256": "32c8b6163ab6414fee4289719e4fc47d7c6782da8f3b61b5a92459d96d0f3cad",
+  "physicalDeviceTested": false,
+  "coldBoot30Slots": true,
+  "checks": [
+    "30 distinct saves loaded after full emulator cold boot",
+    "first chapter page and pagination return refresh",
+    "transparent portrait layers display",
+    "grouped CG list and difference cycling",
+    "all 21 chapters reached through native menu skip",
+    "native story ending reached",
+    "no game errors or image failures during checks"
+  ]
+}

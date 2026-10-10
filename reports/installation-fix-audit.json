@@ -1,0 +1,57 @@
+{
+  "revision": "r1",
+  "original": {
+    "file": "星之终途-RW5-0.1.0.bin",
+    "version": "0.1.0",
+    "bytes": 9980982,
+    "expandedBytes": 11060958,
+    "entries": 945,
+    "sha256": "32c8b6163ab6414fee4289719e4fc47d7c6782da8f3b61b5a92459d96d0f3cad",
+    "certificateSha256": "4e8e1ee24968b0dad6d0956a7e14d848b38b22a203f39c389a45d8737bdc4585",
+    "zipCRCValid": true,
+    "outerSignatureValid": true,
+    "innerSignatureValid": true,
+    "allFileDigestsValid": true,
+    "signedFiles": 917
+  },
+  "candidate": {
+    "file": "com.codex.stella.rw5.debug.0.1.0.rpk",
+    "version": "0.1.0",
+    "bytes": 9981489,
+    "expandedBytes": 11061581,
+    "entries": 946,
+    "sha256": "3a88ee1b436b1252a22f72e30aeaaa78c1eb07f20b79af1f58e22faab977ed7b",
+    "certificateSha256": "4e8e1ee24968b0dad6d0956a7e14d848b38b22a203f39c389a45d8737bdc4585",
+    "zipCRCValid": true,
+    "outerSignatureValid": true,
+    "innerSignatureValid": true,
+    "allFileDigestsValid": true,
+    "signedFiles": 918
+  },
+  "watchManifestMissingInOriginal": true,
+  "addedFiles": [
+    "manifest-watch.json"
+  ],
+  "watchManifestMatchesSource": true,
+  "changedExistingFiles": [
+    "META-INF/CERT",
+    "manifest.json",
+    "META-INF/build.txt"
+  ],
+  "allExistingScriptsUnchanged": true,
+  "allGameResourcesUnchanged": true,
+  "unchangedFilesCompressedStreamsUnchanged": true,
+  "unchangedEntries": 942,
+  "mainManifestChangesOnlyBuildMetadata": true,
+  "compatibleTailWrapping": true,
+  "zipCommentBytes": 148,
+  "finding": "Missing src/config-watch.json prevented DeviceTypePlugin from emitting manifest-watch.json; all physically tested reference ports include it",
+  "failureCause": "Unidentified; previously working apps also failed before user reset and all recovered afterward. Device system/installation state is a supported inference; missing watch metadata and tail wrapping are not established causes.",
+  "physicalInstallationPassed": true,
+  "physicalInstallationCondition": "After user reset of REDMI Watch 5 system, as reported on 2026-10-10",
+  "physicalGameplayTested": true,
+  "physicalFeedbackReport": "reports/installation-issue-v010.json",
+  "physicalGameplayNoBugsReported": true,
+  "physicalGameplayFeedbackDate": "2026-10-10",
+  "physicalGameplayCoverage": "User-reported game experience; no per-feature checklist or full-playthrough record supplied"
+}
