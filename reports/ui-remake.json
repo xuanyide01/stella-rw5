@@ -1,0 +1,61 @@
+{
+  "theme": "original sky and normal-title character on right; white / forest green system panels",
+  "titleBackground": "Original sky and char01 heroine crop; enlarged on right, below logo and touching bottom",
+  "titleHeroinePosition": [
+    160,
+    144
+  ],
+  "titleHeroineSize": [
+    337,
+    370
+  ],
+  "titleHeroineBottom": 514,
+  "titleMenuBackground": "transparent; no white panel or panel decoration",
+  "dialogueText": "#ffffff",
+  "dialogueBackground": "#376b5e solid",
+  "artLetterbox": "symmetric forest-green gradient; CG remains contain",
+  "systemBottomDecoration": false,
+  "titleVisibleInkLeftPixels": {
+    "start": 0,
+    "chapter": 0,
+    "load": 0,
+    "config": 0,
+    "extra": 0,
+    "exit": 0,
+    "after": 0
+  },
+  "titleCommonSourceScale": 0.62,
+  "titleVisibleInkHeights": {
+    "start": 18,
+    "chapter": 18,
+    "load": 18,
+    "config": 18,
+    "extra": 18,
+    "exit": 18,
+    "after": 18
+  },
+  "titleLeftAlignment": true,
+  "titleLabels": [
+    "AFTER STORY",
+    "START",
+    "CHAPTER",
+    "LOAD",
+    "CONFIG",
+    "EXTRA",
+    "EXIT"
+  ],
+  "afterStoryUnlock": "sf.stella_main_clear; completed START flow; hidden and menu collapses before clear",
+  "originalResourceSHA256": {
+    "title/bg.png": "180886ba800214f540fcee989276b6bedda802e01b16ef8ec86e06b442d3e52e",
+    "title/char01.png": "ab3d92176fadecf38de64e6150c240615b9b4f9c3585df8bb52a85b690eb5d1d",
+    "title/logo.png": "2193e3c196e2644aeb87cbe1bdcadf71e2ac5162b3ba52eea5002a5ca4f0edc5",
+    "title/btn.png": "c55949515b3477761b31ffa2d260e33f557779c2cad6044383d4a75b1139210a",
+    "mw/dialog.png": "24476de1eb809e7ca33dde0625f7a4a819e6317d34d77ce8a107187bc6a6a465"
+  },
+  "titleButtonOrigins": "Six original raster button rows; AFTER STORY assembled from their glyphs plus Y from the original YES dialog.",
+  "screen": [
+    432,
+    514
+  ],
+  "uiAssetBytes": 75469
+}

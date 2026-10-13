@@ -1,0 +1,8 @@
+{
+  "result": "not_verified",
+  "firstScreens": "black; inputs not observed in app log",
+  "hotReinstall": "runtime coredump during comparison with the historical package",
+  "scope": "isolated official emulator only",
+  "requires": "full cold restart and current-package retest",
+  "physicalDeviceTested": false
+}

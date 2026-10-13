@@ -15,8 +15,9 @@ let agent,child,server,bootReady=false,bootLog='';
 fs.writeFileSync(path.join(environment,'controller-pid.json'),JSON.stringify({pid:process.pid,script:__filename}));
 const log=fs.createWriteStream(path.join(environment,'emulator.log'),{flags:'a'});
 const packageName=process.env.STARRY_EMULATOR_PACKAGE||'com.codex.stella.rw5';
+const serialPort=Number(process.env.WATCH_SERIAL_PORT||5556),grpcPort=Number(process.env.WATCH_GRPC_PORT||8556),debugPort=Number(process.env.WATCH_DEBUG_PORT||10056),controlPort=Number(process.env.WATCH_CONTROL_PORT||43129);
 const adb=process.env.WATCH_ADB_PATH||path.resolve(path.dirname(require.resolve('@miwt/adb')),'../bin/win/adb.exe');
-async function adbCmd(...args){const r=await exec(adb,['-s','emulator-5556',...args],{windowsHide:true,timeout:240000,maxBuffer:1024*1024*8});return r.stdout;}
+async function adbCmd(...args){const r=await exec(adb,['-s','emulator-'+serialPort,...args],{windowsHide:true,timeout:240000,maxBuffer:1024*1024*8});return r.stdout;}
 async function connect(){if(agent)return agent;const conf=getRunningAvdConfigByName(name);if(!conf)throw new Error('Emulator is not registered yet');agent=createGrpcClient(conf);await agent.waitForReady();return agent;}
 // SDK getScreenshot dereferences response even after an RPC error. Return the
 // error without that dereference so a browser polling during boot cannot crash us.
@@ -28,9 +29,9 @@ function screenshot(a){return new Promise((resolve,reject)=>a.client.getScreensh
 async function install(rpk){const target='/data/stella-rw5.rpk';await adbCmd('wait-for-device');await adbCmd('push',rpk,target);try{const result=await adbCmd('shell','pm','install',target);if(!/success 0/.test(result))throw Error(result.trim()||'Installation did not report success');return result;}finally{await adbCmd('shell','rm',target).catch(()=>{});}}
 async function startApp(){await adbCmd('wait-for-device');for(let n=0;n<80;n++){const info=await adbCmd('shell','pm','get',packageName).catch(()=> '');if(/bAllValid: true/.test(info)){const result=await adbCmd('shell','am','start',packageName);if(!/execution error|failed/i.test(result))return result;}await new Promise(r=>setTimeout(r,500));}throw Error('Emulator services are not ready or the application is not installed');}
 (async()=>{
-  const cmd=await manager.getVvdStartCmd({vvdName:name,qtHideWindow:true,serialPort:5556,grpcPort:8556,debugPort:10056});
+  const cmd=await manager.getVvdStartCmd({vvdName:name,qtHideWindow:true,serialPort,grpcPort,debugPort});
   const args=cmd.split(' ').filter(Boolean);let binary=args.shift();if(!binary.endsWith('.exe'))binary+='.exe';
-  const portIndex=args.indexOf('-port');if(portIndex>=0)args.splice(portIndex+1,0,'5556');
+  const portIndex=args.indexOf('-port');if(portIndex>=0)args.splice(portIndex+1,0,String(serialPort));
   const qemuIndex=args.indexOf('-qemu');
   args.splice(qemuIndex<0?args.length:qemuIndex,0,'-memory','128');
   console.log('STARTING',name);
@@ -51,6 +52,7 @@ async function startApp(){await adbCmd('wait-for-device');for(let n=0;n<80;n++){
       }
       else if(url.pathname==='/install')result=await install(path.resolve(url.searchParams.get('rpk')));
       else if(url.pathname==='/start')result=await startApp();
+      else if(url.pathname==='/wake'){const a=await connect();a.sendKey({key:'Power',eventType:2});result='virtual Power key sent';}
       else if(url.pathname==='/stop')result=await adbCmd('shell','am','stop',packageName);
       else if(url.pathname==='/status'){const a=await connect();const status=await a.getStatus();result={hardware:status.hardwareConfig};}
       else if(url.pathname==='/shutdown'){await adbCmd('shell','poweroff');result='stopped';server.close();}
@@ -59,7 +61,7 @@ async function startApp(){await adbCmd('wait-for-device');for(let n=0;n<80;n++){
       res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify(result));
     }catch(e){res.writeHead(500,{'Content-Type':'application/json'});res.end(JSON.stringify({error:e.message||String(e)}));}
   });
-  server.listen(43129,'127.0.0.1',()=>console.log('CONTROL http://127.0.0.1:43129'));
+  server.listen(controlPort,'127.0.0.1',()=>console.log('CONTROL http://127.0.0.1:'+controlPort));
   process.on('SIGINT',()=>{child.kill();server.close();process.exit();});
 })().catch(e=>{console.error(e);process.exitCode=1;});
 

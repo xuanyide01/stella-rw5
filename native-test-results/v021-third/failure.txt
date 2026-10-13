@@ -1,0 +1,3 @@
+Error: Native timeout: /STELLA_RW5 frame 101 0/
+    at wait (<workspace>\work\stella-rw5\tools\native-ui-check.cjs:10:132)
+    at async <workspace>\work\stella-rw5\tools\native-ui-check.cjs:75:2

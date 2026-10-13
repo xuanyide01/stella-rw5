@@ -1,0 +1,89 @@
+{
+  "result": "passed",
+  "titleVisibleInkBounds": {
+    "after": [
+      0,
+      5,
+      215,
+      23
+    ],
+    "start": [
+      0,
+      5,
+      98,
+      23
+    ],
+    "chapter": [
+      0,
+      5,
+      148,
+      23
+    ],
+    "load": [
+      0,
+      5,
+      81,
+      23
+    ],
+    "config": [
+      0,
+      5,
+      119,
+      23
+    ],
+    "extra": [
+      0,
+      5,
+      105,
+      23
+    ],
+    "exit": [
+      0,
+      5,
+      74,
+      23
+    ]
+  },
+  "allTitleLabelsVisibleHeight": 18,
+  "allTitleLabelsVisibleLeft": 0,
+  "systemBottomStripeRemoved": true,
+  "symmetricForestGreenArtFill": true,
+  "native24And28pxTextScrolledWithoutChangingCG": true,
+  "dialoguePanelSourceSolidColor": "#376b5e",
+  "nativeDialoguePanelPixelRGB": [
+    49,
+    105,
+    90
+  ],
+  "nativeBackResetsTextScrollExactly": true,
+  "nativeTransparentTitleMenuAndHeroineTouchingBottom": true,
+  "titleFirstAfterStory": "AFTER STORY; only after sf.stella_main_clear",
+  "screenshotsSHA256": {
+    "after-chapters-first.png": "2683a222f2789500c33656890b2202f4ab5fd3579b2ad3db83e421980e6ce847",
+    "after-chapters-second.png": "a105bc016c5e3c1010adb3cd8795bd5d6198fbf621025fba68a66284fb44b8a8",
+    "after-ending-title.png": "e507faab7074d2c448376372a660b2c250eb6057b3d00e01777e874fc182f2e6",
+    "after-intro.png": "b62b368610da224735fe5faa7855a15ec3d904b96a5beda623e356252d46102d",
+    "cg.png": "5741ea280072c698b6a41d95ac74e9b2908bf32132abb764fa0895ba6e9f6cef",
+    "choice-loaded-cold.png": "8827649fada8d33f133387899b2272233a2631eaf3466ff153649611ef4c584a",
+    "choice-skip-guard.png": "8827649fada8d33f133387899b2272233a2631eaf3466ff153649611ef4c584a",
+    "gallery.png": "109da13a71c222419747594d28a890c01cff2877409538b4038dbb0f18305161",
+    "long-large-bottom.png": "46bebac6397148c73b553f2903a5215bf0c7f562f4afbf8ff4465aa0a3358333",
+    "long-large-top.png": "449e8073606eae2583ff2d8d477de39960b8f350d286ddaba66500d98e1234ed",
+    "long-next-reset.png": "2569224073bc19b0328261d335f81cfa83bb54536c6db9a963ad208b036d1f5f",
+    "long-standard-bottom.png": "17f0a36139448243e4a5432b98662fe41fae8242f3bcc3c5c967216b256bffb1",
+    "long-standard-return.png": "c99086ecbc860c3813d3d8a4cbe39b20490e87c41b19116ec71ff8a1a0290f3b",
+    "long-standard-top.png": "c99086ecbc860c3813d3d8a4cbe39b20490e87c41b19116ec71ff8a1a0290f3b",
+    "main-clear-unlock.png": "90e4d704962153e36159d213a8a5ec1999f7b7e22a3474f18e18d8dbd7e6a927",
+    "main-ending.png": "90e4d704962153e36159d213a8a5ec1999f7b7e22a3474f18e18d8dbd7e6a927",
+    "main-epilogue.png": "f364a7646414225e9330fc2904734debc62636034e8bda0b944648d94694cce9",
+    "menu.png": "cfe4fa872a8d10c4dd2db2316171b79f9ed9d965db342ac7651dacfd14723d50",
+    "old-slot-01.png": "b62b368610da224735fe5faa7855a15ec3d904b96a5beda623e356252d46102d",
+    "routes.png": "b55896e921fe59276def4803820e72eb47776a59fb71082ac02c8678e3b06645",
+    "settings.png": "134281d5417234d2709d102c6eeb7e2ef07d0e97e563ed3b34f35e50ef1d462d",
+    "title-after-cold.png": "e507faab7074d2c448376372a660b2c250eb6057b3d00e01777e874fc182f2e6",
+    "title-after-exit.png": "e507faab7074d2c448376372a660b2c250eb6057b3d00e01777e874fc182f2e6",
+    "title-before-replay.png": "e507faab7074d2c448376372a660b2c250eb6057b3d00e01777e874fc182f2e6",
+    "title-preview.png": "e507faab7074d2c448376372a660b2c250eb6057b3d00e01777e874fc182f2e6",
+    "title.png": "e507faab7074d2c448376372a660b2c250eb6057b3d00e01777e874fc182f2e6"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "version": "0.2.1",
+  "result": "passed",
+  "runtime": "official vela-watch-5.0 emulator; not REDMI Watch 5 firmware",
+  "screen": [
+    432,
+    514
+  ],
+  "packageBytes": 12213953,
+  "packageSha256": "86d23d2f7824dd97750ebcae47bb71f16bdc1d6975c7f479becb556fa0744a31",
+  "coldUpgradeRepresentativeSlots": [
+    1,
+    30
+  ],
+  "initialLockedStateOnThisPackage": false,
+  "lockedStateEvidence": "17 automated tests and candidate c246905d native title-locked/main-clear-unlock screenshots in v021-second",
+  "historicalFull30SlotReport": "native-test-results/v020/report.json",
+  "physicalDeviceTested": false,
+  "checks": [
+    "real START flow completes and retains unlocked first-row AFTER STORY",
+    "cold upgrade restores old slots 01 and 30, including pending confirmation",
+    "chapter skip cannot bypass pending confirmation",
+    "after-story AE completes at scene 107 and automatically returns to title without replaying scene 108",
+    "real 71-character paragraph 107:110 wraps and scrolls at 24px and 28px",
+    "vertical drag keeps the story cursor unchanged; a fresh dialogue tap advances",
+    "returning to the paragraph resets its scroll position",
+    "original main epilogue scene 21 remains intact and reaches its own ending",
+    "title, chapter list, menu, CONFIG and grouped CG gallery render",
+    "EXIT completes native app lifecycle and app reopens after teardown",
+    "unlocked first-row AFTER STORY works after app restart",
+    "AFTER STORY remains unlocked and its first-row entry works after complete simulator restart"
+  ],
+  "coldBootUnlockPreserved": true
+}

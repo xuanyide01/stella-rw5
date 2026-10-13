@@ -1,0 +1,63 @@
+{
+  "sourceEngine": "RenPy RPYC2 / RPA3 data only",
+  "archiveBytes": 1197056358,
+  "compiledStorySHA256": {
+    "rpy/drama/a0.rpyc": "04c9f2e203c31c39c3f51e98713fd0be62e03ec8858fbe8ed06066499255a4d3",
+    "rpy/drama/a1.rpyc": "e9c62c0624c89e24a7032d826d24c041e31b11be64ee5f50064dd1bcf6ea9473",
+    "rpy/drama/a2.rpyc": "3ed7b00bab5e4a27bc6370e242262b782a342f1c31252a9181cb622ef6187f68",
+    "rpy/drama/a2_1.rpyc": "1b44453d7e9bcd3eaeb4c11d7fe7cbce95cc9ce58103683d1c1b2ee662cad0df",
+    "rpy/drama/a3.rpyc": "21ee25f476da617ff67e161a6a3b75a9a56987a456efd3133bcc0f92828ca506",
+    "rpy/drama/a3_1.rpyc": "ff45e4d374e592090da21c2443609dfa18d8050f5d916b246d0ea0cb546b3ffa",
+    "rpy/drama/a4.rpyc": "4c73709cda22cf96ad8b68396239efea43802cce8150f7be33df51c891107ff0",
+    "rpy/drama/a4_1.rpyc": "b54b11d53341c027709611908738e1e9dbef540ba5e09ccb0e5d631a55665ad7",
+    "rpy/drama/a5.rpyc": "c4859d610febf0819e28ab6ccb0c59e2e5935d1817940b6e39371b6a7a24a84d",
+    "rpy/drama/a5_1.rpyc": "8fb565e615db87d0495232344ae47c2f123c6db6624f8d34d076328619b30a82",
+    "rpy/drama/a6.rpyc": "9b5e7d392d08a6904148cdfe22516ba464dbdc1245778549f85f5f6275dd2587",
+    "rpy/drama/a6_1.rpyc": "4bb6929d67a4fe86b3bd4cc9f1fe2969a755e294c52e604dac02bff0dd460083",
+    "rpy/drama/a7.rpyc": "b73ddf6876a6142565b703054e450f9b85e50a281fb8e8ab2f4f046579934e65",
+    "rpy/drama/a8.rpyc": "e05dab954f7f26ee74382de2640adb6d680069fd607851f0dba935e9bd5fc4e8",
+    "rpy/drama/script.rpyc": "1f72c2df3e7f4cda72e820f0843aa5aae64735b96bdefc812c52678c25b38ca1"
+  },
+  "afterChapters": 8,
+  "mainAfterTextBlocks": 1377,
+  "bonusTextBlocks": 15,
+  "convertedTextBlocks": 1549,
+  "choices": 1,
+  "choiceItems": 1,
+  "storyNodeCounts": {
+    "Python": 32,
+    "UserStatement": 1418,
+    "Show": 261,
+    "With": 1352,
+    "Say": 1546,
+    "Scene": 471,
+    "If": 11,
+    "Jump": 13,
+    "Hide": 113,
+    "Menu": 1,
+    "Init": 1,
+    "Return": 1
+  },
+  "omittedEffects": {
+    "Python": 32,
+    "UserStatement": 1418,
+    "With": 1352,
+    "camera_animation_transform": 259,
+    "achievement_or_language_popup": 11,
+    "Init": 1,
+    "movie": 1,
+    "empty_nvl_pause": 2
+  },
+  "newResourceBytes": 2056022,
+  "afterGalleryImages": 86,
+  "renpyPythonExecuted": false,
+  "executableLaunched": false,
+  "limitations": [
+    "Audio and video omitted, including ending animation.",
+    "Camera movement, zoom, visual filters and timed transitions reduced to static compositions.",
+    "Achievement flags and language-choice popups do not affect the Chinese story and are not emulated.",
+    "Original NVL text keeps no explicit speaker label."
+  ],
+  "legacyEpilogueTextBlocks": 157,
+  "endingAdaptation": "AE finishes at scene 107 and returns to title; a7 reprises main epilogue and is kept only for historical saves. Main scene 21 is unchanged."
+}

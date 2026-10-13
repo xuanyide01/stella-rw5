@@ -1,107 +1,94 @@
-# 星之终途 · 红米手表 5 图文版
+# 《星之终途》· 红米手表 5 图文版
 
-由用户提供的 Steam《星之终途》资源转换而来的 Vela 图文阅读应用。移植、资源转换、界面适配和检查由 **OpenAI Codex** 完成。
+将本地持有的《星之终途》正篇及所提供的 Ren’Py 后日谈《渺茫希望的日记》整合为 Xiaomi Vela 图文阅读应用。程序、转换工具、界面适配与检查由 **OpenAI Codex** 完成，需求审查及实机测试由项目维护者提供。
 
-原作：[Key 官方网站](https://key.visualarts.gr.jp/kinetic/stella/) · [Steam 商店](https://store.steampowered.com/app/2510770/Stella_of_The_End/)。本项目是非官方移植，原作开发商没有为本项目提供支持或背书。
+原作：[Key 官网](https://key.visualarts.gr.jp/kinetic/stella/) · [Steam](https://store.steampowered.com/app/2510770/Stella_of_The_End/)。这是非官方移植；后日谈采用用户提供的独立 Ren’Py 游戏资源，不将其称为 Steam 官方 DLC。
 
-## 版本与功能
+## 当前版本
 
-- 目标设备：REDMI Watch 5，432 × 514；应用名称为「星之终途」，独立包名 `com.codex.stella.rw5`。
-- 当前版本：**0.1.0-r1，已通过 REDMI Watch 5 实机安装和游戏体验测试，暂未发现 bug**（维护者反馈，2026-10-10）。安装包 **9,981,489 字节（约 9.98MB）**，硬性上限 **15,000,000 字节**。应用内部版本仍为 0.1.0 / versionCode 1。
-- 原作 51 个剧情文件中的 **9,424 段中文文本**完整转换；逐段文本摘要与读取顺序已核对。
-- **21 个原作章节入口**，包括序章、片尾与尾声；开始游戏可以连续读到结局。
-- **30 个保存栏位**，手动选择栏位保存/读取，覆盖时确认；存档与其他移植作品分开。
-- 菜单中提供「下一章」、字号切换、显示速度、返回标题；章节跳跃保留遇到选项即停止的保护。本作原始剧情脚本没有分支选项。
-- 原作身体与表情按 PNG 坐标合成；立绘保持比例，下缘贴合文本区域。
-- **177 组 / 308 张**静态 CG 与背景，包含这份 Steam 资源里全部 166 张事件 CG。差分在同一组内点击切换，标题可直接进入鉴赏。
-- 原作标题美术、圆形透明图标、中文缺字补充字体。
+**0.2.1 / versionCode 3**；目标设备为 **REDMI Watch 5，432 × 514**；包名仍为 `com.codex.stella.rw5`，名称仍为「星之终途」，保留圆形透明图标。
 
-下载：[GitHub Release v0.1.0-r1](https://github.com/xuanyide01/stella-rw5/releases/tag/v0.1.0-r1)。其中 `stella-rw5-v0.1.0-r1.bin` 用于表盘自定义工具安装，`.rpk` 内容相同；同时提供源码、安装说明、检查报告及 SHA-256 清单。
+安装包 **12,213,953 字节（12.21 MB）**，低于 **15,000,000 字节**上限；解包后文件总计 **13,462,759 字节**，实际安装还需额外的文件系统及更新临时空间。
 
-## 压缩与区别
+**0.2.1 已由维护者确认实机测试通过（2026-10-13）。** 测试文件 SHA-256 为 `86d23d2f7824dd97750ebcae47bb71f16bdc1d6975c7f479becb556fa0744a31`，反馈记录见 `reports/physical-confirmation-v021.json`。已通过 17 项自动检查、源文本独立校对、图片及字体覆盖、双层签名和 ZIP 检查；原生模拟器范围见 `native-test-results/v021/report.json`。
 
-这是一款剧情图文阅读移植。为控制体积和运行开销，不包含语音、音乐、开场/片尾视频及动态特效。镜头移动、缩放和复杂视觉滤镜简化为静态画面。片尾章节显示省略动画的提示，随后进入原作尾声；未删去中文剧情。
+## 合并内容与界面
 
-背景与 CG 使用最高 320 × 256 的 JPEG（常见画面 320 × 180），立绘裁去部分下半身、最高 200 × 256，使用保留透明度的 256 色 PNG。编译器不会再次量化 PNG。每次只加载一个剧情片段（最多 512 条），历史回退保留最近 8 步，最多同时显示 3 张立绘。
-
-原作统一 CG 表中有 26 个静态条目不在用户这份游戏资源中，另有 1 个开场视频条目；它们不会创建无法打开的按钮。原资源包实际存在的事件 CG 已全部加入。具体来源、差分与未提供条目记录在 `reports/conversion.json`。
+- 正篇保留 51 个源剧情文件的 **9,424 段中文文本**与 **21 个章节入口**。原有 30 个剧情块文件逐字节保持不变，章节编号及存储键延续旧版。
+- 标题首项 **AFTER STORY** 在从 START 完成正篇通关后才出现，进入《渺茫希望的日记》。后日谈提供 **8 个章节入口**：阅读说明、六个故事章节及附加故事；正常入口共 **1,392 段可读源文本**（主线 1,377 段、附加故事 15 段），另保留片尾动画省略提示。
+- 后日谈确认选项后的 `AE` 段落读完，自动返回标题。所提供后日谈包的 `a7`“终章”重复正篇尾声，因此不再从 AFTER STORY 自动接入，也不在后日谈章节目录重复列出。正篇原有第 21 章尾声完整保留；`a7` 的 **157 段文本**及编号 108 留作旧版存档兼容。全部 1,549 段已转换源文本仍可独立校对。
+- 后日谈原脚本的唯一确认选项 **「谢谢你，菲莉娅！！！」** 保留，目标仍对应 `AE` 段落。菜单“下一章”会停在该选项处，重复使用也不能绕过，存档／读档保持待选状态。
+- 标题使用原作的**天空与人物背景**，菲莉娅裁出并放大至 370 px 高，位于右侧及标题标识下方，下沿与屏幕底部相接，选项背板为**透明**，沿用原作标识和按钮字形。所有入口按实际可见字形统一左对齐：**AFTER STORY、START、CHAPTER、LOAD、CONFIG、EXTRA、EXIT**；AFTER STORY 使用原作已有字形组合，去除透明内边距造成的偏移；七项采用同一 0.62 缩放比例，可见字形高度统一为 18 px。未通关时隐藏 AFTER STORY 并收拢菜单，章节目录也隐藏后日谈路线。
+- 剧情文字为**白色**，文本框采用**浅墨绿色纯色**与细线。上方 CG 保持比例完整显示，上下留白由相近的墨绿色渐变填充；菜单、存档、目录及 CG 鉴赏统一为白色／墨绿色科技风，背景连续延伸至顶部，移除底部加粗装饰横条。
+- 长段落**自动换行、上下滑动浏览**；纵向拖动不推进剧情，重新点击文本框仍按通常阅读规则继续（逐字显示时先补全当前句，再点进入下一句）。新句及回退至前句都从文本顶部开始。
+- **30 个共享保存栏位**可保存正篇或后日谈，手动选择栏位保存与读取，覆盖前确认。保留旧版键 `stella_rw5_slot_v1_*`，旧正篇存档可继续读取；后日谈使用独立章节编号 101—109。
+- **CHAPTER** 先选择正篇或后日谈，再选择章节。路线／章节第一页、返回与翻页均使用独立条目标识，防止首次切换停留在旧内容。
+- **EXTRA** 提供 **256 组／394 张**图片，包含原有 308 张及后日谈新增 86 张；同场景差分在组内点击切换。全部鉴赏图片开放，无需解锁。
+- **CONFIG** 可设置字号和逐字／即时显示；**EXIT** 调用 Vela `$app.exit()` 退出。退出不代替保存，请在离开剧情前保存到栏位。
 
 ## 安装与使用
 
-1. 使用「表盘自定义工具」向 REDMI Watch 5 安装对应 `.bin` 文件。`.bin` 与 `.rpk` 内容相同。
-2. 手机蓝牙传输结束后还需要等待一阵，手表才能完成安装并显示图标；不要立即重复传输。
-3. 在手表应用列表启动「星之终途」。阅读中可点画面或「下一句」，向右滑动或点「菜单」打开阅读菜单。
-4. 保存/读取进入 30 栏位列表。点击 CG 列表进入画面，点击画面切换同组差分。
+1. 使用[表盘自定义工具](https://www.bandbbs.cn/)向 REDMI Watch 5 安装 `星之终途-RW5-0.2.1.bin`；同版 `.rpk` 内容完全相同。
+2. **手机蓝牙传输结束后仍需等待一阵，设备才会完成安装并显示图标。** 不要在安装未完成时连续上传。
+3. 希望保留旧存档时优先覆盖安装；主动卸载通常会清除本应用数据。升级前应保留旧安装包与能够导出的存档备份。
+4. START 进入正篇，AFTER STORY 进入后日谈；LOAD 自选栏位读取。阅读中点画面或“下一句”继续，点“菜单”保存、读取、切换显示或安全跳到下一章。
+5. 从 START 完成正篇后解锁 AFTER STORY，并自行作出后日谈确认。旧版正篇已读完但尚无解锁记录时，可读取最后一个正篇流程存档并再读至结束；单独回看第 21 章不解锁。通关标记沿用既有进度键，重开应用后保留。CHAPTER 是回看入口，不代替完整流程。
 
-推荐使用 **`星之终途-RW5-0.1.0-r1.bin`**。本包在用户重置手表系统后已成功安装。手机工具会检查可用空间，传输成功本身不能证明手表已完成安装；目前没有证据将此次失败归因于空间不足。
+## 技术范围与压缩
 
-首次实机验证时应保留其他游戏的原安装包与存档。此应用只使用 Vela 应用安装，不需要刷写固件。
+正篇使用 Artemis/PF8 字面量 AST 转换，后日谈使用 RPA3 索引与 RPYC2 语法数据转换。工具不运行原游戏 EXE、Ren’Py 脚本中的 Python 或任意 Lua/TJS；RPA 不允许反序列化全局对象，RPYC 仅映射白名单语法对象为惰性数据。
 
-## 测试与异常处理
+为控制体积及运行开销，本版不包含语音、音乐、视频或复杂动态特效。后日谈片尾保留省略提示并返回标题，附加故事读完也返回标题。镜头移动、缩放、滤镜和定时过渡简化为静态构图；原作的成就弹窗及语言选择弹窗不在手表中复现。正篇和后日谈均保留原小说式文本，原段落没有独立人物标签时不会擅自拆写人名。
 
-`reports/package-audit.json` 记录最终包的双层签名、所有文件摘要、ZIP CRC、图片解码、图标透明度和字体覆盖检查。`tests/reader.test.cjs` 验证全文读取顺序、全部章节跳跃、选项保护、存档与章节列表刷新。
+场景与 CG 最高 320 × 256，常见画面为 320 × 180 JPEG；人物裁去部分下部以突出头部和上半身，保留透明度的 PNG 最高 200 × 256。每次仅加载一块剧情（最多 512 条），历史回退保留最近 8 步，最多显示 3 张人物。编译后再次核对最终 PNG／JPEG 与源文件一致，避免工具二次有损压缩。原作部分高幅画面采用静态裁切，不能将本版称为完整演出复刻。
 
-2026-10-10 原始 0.1.0 包已通过 **9 项自动检查**和模拟器安装测试：30 个不同位置的存档在完整冷启动后全部恢复，章节列表首次进入和翻页返回正常刷新，透明立绘与 CG 差分正常显示，菜单连续跳跃通过全部 21 章并到达结局。该完整测试过程未记录应用错误或图片加载失败。对应原始包 SHA-256：`32c8b6163ab6414fee4289719e4fc47d7c6782da8f3b61b5a92459d96d0f3cad`。
+## 验证材料
 
-**实机反馈（2026-10-10）：最初传输完成后等待约 2 分钟仍未完成安装，工具与手表无报错；同时安装着《夏日口袋》和 CLANNAD。随后第一次安装修订包失败，先前能安装的应用也安装失败；用户重置手表系统后，全部应用成功安装。** 据当前交付版本的上下文，将 0.1.0-r1 记录为重置后实机安装通过。原始 0.1.0 是否在重置后重新测试未明确，因此不更新其历史失败记录。
+| 范围 | 记录 |
+| --- | --- |
+| 原有正篇全文、顺序及章节 | `reports/text-provenance.json`、`tests/reader.test.cjs` |
+| 正篇 30 个剧情块不变、旧存档位置 | `reports/after-story-baseline.json`、自动检查 |
+| 后日谈源文本独立核对 | `reports/after-source-audit.json`、`reports/after-text-provenance.json` |
+| 唯一确认选项原文及目标 | `reports/after-choice-source.json`、自动检查与原生检查 |
+| 转换数量、源脚本摘要和演出边界 | `reports/after-conversion.json`、`reports/conversion.json` |
+| 原版界面来源及样式 | `reports/ui-remake.json` |
+| 精确安装包、签名、图标、字体、图片 | `reports/package-audit.json` |
+| 本版冷启动升级、旧槽 01／30、长文本滑动和点击、结束、退出 | `native-test-results/v021/report.json`及对应截图 |
+| 0.2.0 的历史完整 30 槽冷启动恢复 | `native-test-results/v020/report.json`，不替代本版完整 30 槽实测 |
 
-旧应用同时失败、重置后全部恢复，支持手表当时的系统或安装状态异常这一推测；无法据此确定具体原因，也不能将最初失败单独归因于本游戏包、缺少手表配置或包尾格式。用户说明工具在空间不足时会拒绝传输，当前没有确认是空间问题。**随后维护者确认游戏体验测试中暂未发现 bug。** 未提供逐项功能或全流程通关记录，因此实机结论限于本次反馈，不声称已穷尽所有场景和固件。
+官方模拟器为 `vela-watch-5.0`、432 × 514、128 MB，并非 REDMI Watch 5 实际固件。本版在完整冷启动后覆盖安装并验证旧存档 01 与仍待确认的 30，使用真实剧情 107:110 验证 24／28 px 两种字号的换行、纵向拖动和点击。最终包沿用已通关模拟器数据，重新完成 START 流程并验证第一项后日谈入口；未通关隐藏状态由自动检查及同一页面代码的 c246905d 候选包原生截图核对，记录位于 native-test-results/v021-second。首个 0.2.1 候选包的测试在 EXIT 后立即调用模拟器 API 重开时，调试服务 inspector 的 uv_loop_init 出现异常；记录保留于 reports/native-v021-first-exit.json，不能将该次运行称为完整通过。最终验证在生命周期清理结束后再重开，等待新页面 onShow 与背景加载，然后仅在全黑时发送虚拟电源键。候选包重开后的黑屏已在唤醒后恢复，解锁标记仍保留；相应失败材料位于 native-test-results/v021-second 和 v021-third。历史 0.2.0 的初次黑屏及热重装异常记录保留于 `reports/native-v020-first-boot.json`，其成功的完整 30 槽检查也保留。0.1.0-r1 的历史资料保留于 `docs/history/README-v010-r1.md`。
 
-**r1 补齐手表配置并修订封装**：原项目缺少 `src/config-watch.json`，使兼容编译器没有生成 `manifest-watch.json`；此前实机成功的《夏日口袋》、CLANNAD 和《纸上的魔法使》都有这份配置。r1 按相同方式补齐空的设备覆盖配置，由原编译器生成与源清单一致的手表配置，重新签署内外层 RPK，并采用《夏日口袋》0.1.6-r1 / 0.1.7 实机成功的尾部封装流程。
+长文本使用 Vela 原生 [text](https://iot.mi.com/vela/quickapp/zh/components/basic/text.html) 与 [scroll](https://iot.mi.com/vela/quickapp/zh/components/container/scroll.html)，不限行数；新句通过 `scrollTo({top:0})` 复位，并依据[触摸事件](https://iot.mi.com/vela/quickapp/zh/components/general/events.html)区分拖动和轻点。没有按固定字数改写原作段落。
 
-剧情、图像、应用脚本及它们的压缩数据逐字节不变。新增 `manifest-watch.json`，原有文件只有签名、构建时间和构建说明变化；`reports/installation-fix-audit.json` 记录对照与双层签名检查。补齐配置消除了与此前已验证包的结构差异；重置后的安装通过不能证明本项修订是此次恢复的决定因素。
+## 异常处理
 
-r1 精确文件的模拟器冷启动环境安装与启动检查见 `native-test-results/r1-report.json`，原包完整的 30 栏位冷启动、21 章和全文测试结果保留在 `original-v010-report.json`；两者游戏内容完全相同。r1 的 SHA-256 为 `3a88ee1b436b1252a22f72e30aeaaa78c1eb07f20b79af1f58e22faab977ed7b`。
+- 应用黑屏、退出或无响应：通过设备返回操作离开应用，重新打开并读取较早存档；不要连续快速点击。设备仍可操作时可正常重启。
+- 某章节无法读取：返回标题选择相同章节重试，或读取其他栏位；重复出现时记录章节、触发操作、固件和安装文件 SHA-256。
+- 传输完成后没有图标：先等待设备端处理，再正常重启并用同版文件重试。若旧版和其他已知可安装应用也同时失败，应检查设备安装状态；历史上重置系统曾恢复安装，但重置会清除数据，应作为最后的恢复手段。
+- 如需退回版本，保留旧 0.1.0-r1 文件；卸载后重装可能清除所有存档。后日谈存档无法由旧正篇版识别。
 
-调查中仅调整包尾的中间包也在模拟器通过，但因随后查明缺少手表配置，未作为安装修复包交付。首次热重装后启动触发了模拟器调试服务的底层异常；随后虚拟环境冷启动复查，记录保留在 `reports/native-restart-issue.json`。本地预览服务也修复了启动期间截图 RPC 失败导致控制进程退出的问题；这些调试辅助工具不进入手表安装包。
+本项目仅使用普通 Vela 应用安装，不修改手表固件；现有检查不构成对所有场景或固件绝无异常的保证。
 
-官方 Vela 模拟器按 **432 × 514、128MB 内存**配置；模拟器不是红米手表 5 的实际固件。**r1 已由维护者确认重置系统后安装成功，游戏体验测试暂未发现 bug**；实机通过不代表所有场景或固件都不会出现问题。
+## 构建与再次转换
 
-如出现异常：
-
-- 仅应用黑屏或退出：返回手表应用列表，重新打开，尝试读取较早的存档；避免连续快速点击。
-- 出现「章节读取失败」：返回标题选择该章节重试，或选择其他存档。重复出现时重新安装同版本文件。
-- 传输结束仍没有图标：先等待安装完成，再正常重启手表，用 r1 文件重新传输一次。若先前已能安装的应用也失败，应先排查手表的系统或安装状态，保留工具提示、设备固件版本与等待时长。本次用户重置系统后恢复，但不应把重置作为每次安装的常规步骤；重置前应备份能导出的数据与存档，重置可能清除应用、存档及设置。卸载也可能清除本应用存档。
-- 系统界面无响应：优先按设备正常重启操作恢复；必要时按照小米官方说明重启。提供设备固件版本、章节/存档号及复现步骤即可定位，恢复出厂不是首选处理方式。
-
-## 从自己的游戏资源重建
-
-需要 Node.js、Python（Pillow、fontTools、cryptography）与合法取得的原作资源。`src/` 已包含转换后的资源，可以直接构建；重新提取时才需要提供自己的同版游戏文件。仅解析 PF8 内容和字面量 AST 表，**不执行原作 EXE 或 Lua 脚本**。原游戏及其存档目录只读。
-
-使用已转换资源构建：
+已转换资源在 `src/common/`；正常构建不需要原游戏或后日谈归档。
 
 ```powershell
-npm install --ignore-scripts
-npm install --prefix tools/compat-toolkit aiot-toolkit@1.1.0 --ignore-scripts
 npm test
+npm install --prefix tools/compat-toolkit --ignore-scripts
 npm run build
 ```
 
-重新从自己的游戏资源生成剧情和素材：
+安装兼容工具前，按 `tools/compat-toolkit/package.json` 的锁定版本处理；实际安装包使用 **aiot-toolkit 1.1.0**。构建脚本检查工具版本、手表清单，并执行与已通过实机版本相同的兼容封装。也可用 `WATCH_COMPAT_TOOLKIT` 指定已有同版工具。
 
-```powershell
-$env:STELLA_GAME_ROOT = '你的Steam游戏目录\Stella of The End'
-python -m pip install -r requirements.txt
-python tools/convert.py
-python tools/complete-gallery.py
-python tools/build-text-font.py '你的NotoSansMonoCJKsc-Regular.otf路径' --default-font 'Vela默认字体路径'
-npm install --prefix tools/compat-toolkit aiot-toolkit@1.1.0 --ignore-scripts
-node --test tests/reader.test.cjs
-node tools/build.cjs
-python tools/audit-package.py 'Vela默认字体路径'
-```
+再次转换正篇需设置 `STELLA_GAME_ROOT` 后执行 `tools/convert.py`；随后按 `tools/complete-gallery.py` 的规则补齐该版资源。再次合并后日谈需将 `STELLA_AFTER_ROOT` 指向含 `game/archive.rpa` 的内层目录并执行 `tools/convert-after-story.py`。重建原版 UI 时设置 `STELLA_GAME_ROOT` 并执行 `tools/remake-ui.py`。字形补集生成使用 OFL 的 Noto Sans Mono CJK SC，运行 `tools/build-text-font.py`；模拟器系统字体只用于覆盖分析，不随本项目分发。
 
-请保留 `src/config-watch.json`，构建依靠它生成 `manifest-watch.json`。构建默认完成兼容封装并重新签名，超过 15,000,000 字节会失败。`tools/audit-install-fix.py 原始0.1.0包 新包` 对照本次完整修复；`tools/repack-rpk.cjs INPUT.rpk OUTPUT.rpk` 与 `tools/audit-repack.py 原始包 新包` 可单独执行和验证仅包尾变化的处理。构建时间使重新编译的文件未必与发布文件 SHA 相同。
+`tools/emulator-server.cjs` 支持独立 `WATCH_VVD_NAME`、`WATCH_CONTROL_PORT`、`WATCH_SERIAL_PORT`、`WATCH_GRPC_PORT` 和 `WATCH_DEBUG_PORT`。当前开发检查器默认控制页为 `http://127.0.0.1:43135/`，只监听本机。再次检查需使用对应 SDK、环境路径及控制端口。
 
-`WATCH_COMPAT_TOOLKIT` 可指定已安装的 1.1.0 编译器目录；`WATCH_SDK_HOME` 与 `STARRY_EMULATOR_HOME` 可指定现有 SDK 和独立模拟器目录。SDK 测试工具需要 `@aiot-toolkit/emulator`，`tools/setup-emulator.cjs` 注册专用虚拟设备，`tools/start-emulator.ps1` 启动本地预览 `http://127.0.0.1:43129/`。
+## 致谢与权利归属
 
-## 致谢与授权
+感谢 Key、原作编剧、美术与译者，以及所提供后日谈作品的制作、汉化和素材贡献者。后日谈资源内说明称其依据原作实体特典剧本制作；这里保留该来源说明，不据此推定其全部素材获得再分发许可。
 
-- Key / VISUAL ARTS：《星之终途》原作剧情、美术和游戏资源。
-- **liuyuze61** 的手表移植作品提供了最初参考：[ATRI 1.5.1](https://api.bandbbs.cn/wftools/bandbbs.html?code=A&state=1820673)、[星空列车与白的旅行 v1.0.0](https://api.bandbbs.cn/wftools/bandbbs.html?code=A&state=1841662)。
-- [表盘自定义工具及 BandBBS 相关团队](https://www.bandbbs.cn/)：安装与分享工具。
-- 小米 Vela / AIoT Toolkit：应用开发与官方模拟器工具。
-- [morkt / GARbro](https://github.com/morkt/GARbro)：PF8 格式实现是本项目只读解析器的参考，相关 MIT 声明见 `THIRD_PARTY_NOTICES.md`。
-- Noto 字体项目：缺字补充字体，SIL OFL 1.1 授权见 `licenses/`。
+感谢 @liuyuze61 的[《ATRI》1.5.1 移植](https://api.bandbbs.cn/wftools/bandbbs.html?code=A&state=1820673)、[《星空列车与白的旅行》v1.0.0 移植](https://api.bandbbs.cn/wftools/bandbbs.html?code=A&state=1841662)及 [ATRI-miband](https://github.com/liuyuze61/ATRI-miband) 提供参考；感谢[表盘自定义工具及米坛社区](https://www.bandbbs.cn/)相关团队、GARbro 格式实现、Vela 开发工具与字体项目。
 
-自编移植代码采用 [MIT](LICENSE)。原作剧情、图片、游戏商标，以及其他第三方素材不在 MIT 授权范围内，仍归各自权利人所有。仓库、源码压缩包和安装包包含转换后的原作素材；它们不因本项目开源获得 MIT 授权，使用和分发仍应按原素材授权处理。请支持原作。
+自编代码采用 MIT 许可证。原作及后日谈文本、图像、商标与第三方字体不因该许可证取得 MIT 授权；对应说明见 `THIRD_PARTY_NOTICES.md` 与 `licenses/`。本版发布为 [v0.2.1](https://github.com/xuanyide01/stella-rw5/releases/tag/v0.2.1)，历史 v0.1.0-r1 安装包与 Release 保留。

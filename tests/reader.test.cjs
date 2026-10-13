@@ -14,3 +14,74 @@ test('actual chapter UI refreshes first page repeatedly and returns directly to 
 test('actual slot UI reads 30 slots sequentially and cancels late callbacks on close',()=>{const {p,pending,timers}=page();p.openSlots('load');const saved=JSON.stringify(api.createSave(api.newState(),'play',1000));for(let i=0;i<30;i++){assert.equal(pending.length,1);const r=pending.shift();assert.equal(r.key,api.slotKey(i));r.success(saved);if(i<29)timers.shift()();}assert.equal(p._slotData.length,30);assert.equal(p.loading,false);p.closeSlots();p.openSlots('load');const first=pending.shift();p.closeSlots();first.success('');assert.equal(pending.length,0);});
 test('actual page menu skips exactly one chapter and history restores the previous frame',()=>{const {p,timers}=page();p.startNew();assert.equal(p.mode,'play');assert.equal(p.session.chapter,1);const before=api.checkpoint(p.session);p.showMenu();p.goNextChapter();for(let n=0;p._chapterSkip;n++){assert.ok(n<1000);timers.shift()();}assert.equal(p.session.chapter,2);p.goBack();assert.deepEqual(api.checkpoint(p.session),before);});
 test('invalid save locations are rejected and storage keys are independent',()=>{for(const cursor of [-1,NaN,1.5,100000])assert.throws(()=>api.restore({...api.newState(),cursor}));assert.match(api.slotKey(0),/^stella_rw5_/);assert.match(api.PROGRESS_KEY,/^stella_rw5_/);});
+
+test('after story replays every converted source text and reaches its own ending',()=>{
+ const proof=JSON.parse(fs.readFileSync(path.join(root,'reports/after-text-provenance.json'),'utf8'));
+ for(const start of [api.catalog.afterInitial,108,109]){
+  const s=api.newState(start,true),expected=proof.filter(x=>start>=108?x.scene===start:x.scene!==108&&x.scene!==109),actual=[];let notes=0,choices=0;
+  for(let i=0;i<2000;i++){
+   const f=frame(s);if(f.type==='end')break;
+   if(f.type==='choice'){choices++;api.choose(s,f.items[0],0);continue;}
+   assert.equal(f.type,'text');
+   if(f.text==='（后日谈片尾动画在手表图文版中省略，点击继续返回标题。）')notes++;
+   else actual.push({scene:s.chapter,cursor:s.cursor,textSHA256:crypto.createHash('sha256').update(f.text).digest('hex')});
+   api.next(s);
+   if(i%17===0)Object.assign(s,api.decodeSave(JSON.stringify(api.createSave(s,'play',i))).state);
+  }
+  assert.ok(s.ended);assert.equal(s.chapter,start>=108?start:107);assert.equal(choices,start>=108?0:1);assert.equal(notes,start>=108?0:1);
+  assert.deepEqual(actual,expected.map(({scene,cursor,textSHA256})=>({scene,cursor,textSHA256})));
+ }
+});
+test('the real after-story confirmation cannot be bypassed by repeated chapter skip or saving',()=>{
+ const source=JSON.parse(fs.readFileSync(path.join(root,'reports/after-choice-source.json'),'utf8'))[0],s=api.newState(source.scene,true);
+ assert.equal(frame(s,true,api.nextChapter(s)).type,'choice');assert.equal(s.cursor,source.cursor);
+ for(let i=0;i<3;i++){const saved=api.decodeSave(JSON.stringify(api.createSave(s,'choice',i)));Object.assign(s,saved.state);assert.equal(frame(s,true,api.nextChapter(s)).type,'choice');assert.equal(s.cursor,source.cursor);}
+ const f=frame(s);assert.equal(f.items[0].text,'「谢谢你，菲莉娅！！！」');assert.equal(f.items[0].to,source.items[0].to);
+ api.choose(s,f.items[0],0);const target=frame(s);assert.equal(target.type,'text');assert.equal(s.cursor,source.items[0].to);
+});
+test('new title entries select independent stories, settings and system exit',()=>{
+ const {p}=page();p.startAfterStory();assert.equal(p.mode,'title');p._progress.variables['sf.stella_main_clear']=true;p.refreshProgress();p.startAfterStory();assert.equal(p.mode,'play');assert.equal(p.session.chapter,101);
+ p.toTitle();p.startNew();assert.equal(p.session.chapter,1);
+ p.toTitle();p.openSettings();assert.equal(p.mode,'settings');p.toggleFont();assert.equal(p.fontSize,28);p.toTitle();
+ let exits=0;p.$app={exit(){exits++;}};p.exitApplication();assert.equal(exits,1);assert.equal(p.timer,null);assert.equal(p._chapterSkip,null);
+});
+test('two-story chapter selector refreshes its first page and returns to the story selector',()=>{
+ const {p}=page();p._progress.variables['sf.stella_main_clear']=true;p.refreshProgress();
+ for(let i=0;i<4;i++){
+  p.openChapterRoutes();assert.equal(p.mode,'routes');assert.equal(p.browseRows.length,2);const keys=p.browseRows.map(x=>x.key);
+  p.selectBrowse(1);assert.equal(p.mode,'chapters');assert.equal(p.browseRows[0].name,'后日谈 · 阅读说明');assert.ok(p.browseRows.every(x=>!keys.includes(x.key)));
+  const first=p.browseRows.map(x=>x.key);p.nextBrowse();p.previousBrowse();assert.deepEqual(p.browseRows.map(x=>x.key),first);
+  p.closeBrowse();assert.equal(p.mode,'routes');assert.deepEqual(p.browseRows.map(x=>x.key),keys);p.selectBrowse(0);assert.equal(p.browseRows[0].name,'01 · 遭遇与觉醒');p.closeBrowse();p.closeBrowse();assert.equal(p.mode,'title');
+ }
+});
+test('all historical main-story data is byte-identical and old save locations still restore',()=>{
+ const baseline=JSON.parse(fs.readFileSync(path.join(root,'reports/after-story-baseline.json'),'utf8'));
+ for(const [file,sha] of Object.entries(baseline.files))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),sha,file);
+ for(let id=1;id<=21;id++){const old=api.createSave(api.newState(id,true),'play',1000);assert.equal(api.decodeSave(JSON.stringify(old)).state.chapter,id);}
+});
+
+test('after story ends at AE and returns to title; the original epilogue stays in the main story',()=>{
+ const {p}=page();assert.equal(api.catalog.afterEnd,107);assert.ok(!api.catalog.routes[1].scenes.includes(108));assert.ok(api.catalog.routes[0].scenes.includes(21));
+ for(const id of [107,108,109,21]){
+  p.session=api.newState(id);p.session.cursor=operations[id].length-1;p.cachedChapter=0;p.renderFrame();
+  assert.equal(p.mode,id===21?'end':'title');assert.ok(p.session.ended);
+ }
+});
+
+test('dragging a long dialogue keeps its position, a fresh tap advances, and each sentence resets scroll to top',()=>{
+ const {p}=page(),scrolls=[];p.$element=()=>({scrollTo:position=>scrolls.push(position)});
+ p.session=api.newState(107);p.session.cursor=110;p.cachedChapter=0;p.renderFrame();assert.ok(p.fullText.length>65);
+ const position=p.session.cursor;
+ p.dialogueTouchStart({touches:[{pageX:200,pageY:430}]});p.dialogueTouchMove({touches:[{pageX:201,pageY:350}]});p.dialogueTap();
+ assert.equal(p.session.cursor,position);p.swipe({direction:'up'});assert.equal(p.mode,'play');
+ p.dialogueTouchStart({touches:[{pageX:200,pageY:360}]});p.dialogueTap();assert.equal(p.session.cursor,position+1);
+ assert.ok(scrolls.length>=2);for(const s of scrolls){assert.equal(s.top,0);assert.equal(s.behavior,'instant');}
+});
+
+test('AFTER STORY unlocks only after story-mode main completion and the flag survives progress reload',()=>{
+ const {p,writes}=page();assert.equal(p.afterUnlocked,false);p.openChapterRoutes();assert.equal(p.browseRows.length,1);p.selectBrowse(1);assert.equal(p.mode,'routes');p.toTitle();
+ p.session=api.newState(21);p.session.cursor=operations[21].length-1;p.cachedChapter=0;p.renderFrame();assert.equal(p.afterUnlocked,false);
+ p.session=api.newState(21,true);p.session.cursor=operations[21].length-1;p.cachedChapter=0;p.renderFrame();assert.equal(p.afterUnlocked,true);
+ const record=writes.find(x=>x.key===api.PROGRESS_KEY);assert.ok(record);const decoded=api.decodeProgress(record.value);assert.equal(decoded.variables['sf.stella_main_clear'],true);
+ p._progress=decoded;p.refreshProgress();p.toTitle();p.openChapterRoutes();assert.equal(p.browseRows.length,2);p.toTitle();p.startAfterStory();assert.equal(p.session.chapter,101);
+});

@@ -1,0 +1,138 @@
+{
+  "positions": [
+    [
+      101,
+      0
+    ],
+    [
+      101,
+      1
+    ],
+    [
+      101,
+      2
+    ],
+    [
+      101,
+      3
+    ],
+    [
+      101,
+      4
+    ],
+    [
+      101,
+      5
+    ],
+    [
+      101,
+      6
+    ],
+    [
+      101,
+      7
+    ],
+    [
+      101,
+      8
+    ],
+    [
+      102,
+      0
+    ],
+    [
+      102,
+      1
+    ],
+    [
+      102,
+      2
+    ],
+    [
+      102,
+      3
+    ],
+    [
+      102,
+      4
+    ],
+    [
+      102,
+      5
+    ],
+    [
+      102,
+      6
+    ],
+    [
+      102,
+      7
+    ],
+    [
+      102,
+      8
+    ],
+    [
+      102,
+      9
+    ],
+    [
+      102,
+      10
+    ],
+    [
+      102,
+      11
+    ],
+    [
+      102,
+      12
+    ],
+    [
+      102,
+      13
+    ],
+    [
+      102,
+      14
+    ],
+    [
+      102,
+      15
+    ],
+    [
+      102,
+      16
+    ],
+    [
+      102,
+      17
+    ],
+    [
+      102,
+      18
+    ],
+    [
+      102,
+      19
+    ],
+    [
+      107,
+      423
+    ]
+  ],
+  "distinctSlots": 30,
+  "slot30Mode": "choice",
+  "requiresColdBoot": true,
+  "checks": [
+    "native title START and AFTER STORY entries",
+    "white dialogue on forest green",
+    "two-story first-page navigation",
+    "main story opens independently",
+    "CONFIG and grouped CG gallery",
+    "chapter skip stops at actual after-story choice twice",
+    "choice save and correct target 107:424",
+    "after-story final chapter and ending",
+    "EXIT app lifecycle and reopen"
+  ]
+}

@@ -2,6 +2,10 @@
 
 The application's original reader, user interface, converter and tests are MIT-licensed. Original game text, art, names and trademarks belong to Key / VISUAL ARTS and their respective rightsholders; they are not relicensed by this project's MIT license.
 
+Version 0.2.0 additionally converts the user-provided Ren'Py after-story game, Diary of a Faint Hope / 《渺茫希望的日记》. Its script, translation, artwork and other materials retain their respective rightsholders' terms. The input game's own notices describe it as a fan-made game based on an original special-edition after-story script; this project does not infer a blanket redistribution license from that description. Original Ren'Py engine code, compiled RPYC files, RPA archives, audio and video are not distributed in this source package. The syntax reader maps a limited whitelist of serialized types to inert data and does not run Ren'Py or its embedded Python statements.
+
+The new interface reuses Key's original title illustration, logo, button glyphs and forest-green dialogue texture. Those bitmap assets remain original-game material, including the recombined AFTER STORY label.
+
 The read-only PF8 parser was written with reference to [GARbro's Artemis ArcPFS.cs](https://github.com/morkt/GARbro/blob/master/ArcFormats/Artemis/ArcPFS.cs), copyright (C) 2016-2017 morkt, MIT licensed. The reference implementation documents the archive index and SHA-1 based payload XOR; this project does not copy or execute the original game engine.
 
 MIT License — GARbro reference:

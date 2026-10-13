@@ -1,0 +1,14 @@
+{
+  "result": "passed",
+  "extractedSourceChineseTextOrderMatchesConverted": true,
+  "checkedTextBlocks": 1549,
+  "choiceTextAndDestinationChecked": true,
+  "confirmationTargetLabel": "AE",
+  "sourceEndingLabel": "a7",
+  "adaptedAfterEnding": "AE -> title",
+  "legacyEpiloguePreserved": true,
+  "mainEpilogueScene": 21,
+  "bonusEndingLabel": "a0 -> splashscreen",
+  "sourceParsedAsInertData": true,
+  "gameCodeExecuted": false
+}

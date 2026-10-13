@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "packageSHA256": "86d23d2f7824dd97750ebcae47bb71f16bdc1d6975c7f479becb556fa0744a31",
+  "targetDevice": "REDMI Watch 5",
+  "date": "2026-10-13",
+  "source": "maintainer message in this chat",
+  "statement": "测试通过，将当前版本上传github",
+  "physicalTestReported": true,
+  "scope": "Maintainer reports current-version test passed; no additional firmware or route coverage inferred."
+}

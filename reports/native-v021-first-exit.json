@@ -1,0 +1,9 @@
+{
+  "result": "not_verified",
+  "candidatePackageSha256": "c8ad0ee90ec60a9d3ed612d3479a1205df0d819a016873820fd74da1491e1c57",
+  "readAndScrollChecksReached": true,
+  "failedPhase": "immediate simulator API reopen after EXIT",
+  "nativeFailure": "inspector::server::WorkerImpl::doServer / uv_loop_init in simulator debug service; old runtime still in free_runtime/removeApp",
+  "resolutionBeingTested": "wait for lifecycle teardown before reopening and cold-retest final build",
+  "physicalDeviceTested": false
+}
