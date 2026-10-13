@@ -12,6 +12,24 @@
 
 **0.2.1 已由维护者确认实机测试通过（2026-10-13）。** 测试文件 SHA-256 为 `86d23d2f7824dd97750ebcae47bb71f16bdc1d6975c7f479becb556fa0744a31`，反馈记录见 `reports/physical-confirmation-v021.json`。已通过 17 项自动检查、源文本独立校对、图片及字体覆盖、双层签名和 ZIP 检查；原生模拟器范围见 `native-test-results/v021/report.json`。
 
+## 界面截图
+
+以下展示 **0.2.1 红米手表移植版**的实际界面，尺寸均为 **432 × 514**。标题图保留维护者提供的完整 PNG 原文件，未缩放或重新编码；其画面与该版本原生模拟器截图一致。其余图片取自该版本的 Vela 原生模拟器检查记录，属于程序运行截图。标题展示正篇通关后解锁 AFTER STORY 的状态。
+
+<p align="center">
+  <a href="docs/screenshots/v0.2.1/title.png"><img src="docs/screenshots/v0.2.1/title.png" width="324" alt="《星之终途》移植版标题界面，AFTER STORY 已解锁"></a>
+</p>
+
+| 正篇阅读界面 | 后日谈长文本界面 |
+| :---: | :---: |
+| <a href="docs/screenshots/v0.2.1/game-main.png"><img src="docs/screenshots/v0.2.1/game-main.png" width="216" alt="《星之终途》正篇阅读界面"></a> | <a href="docs/screenshots/v0.2.1/game-after-story.png"><img src="docs/screenshots/v0.2.1/game-after-story.png" width="216" alt="《渺茫希望的日记》长文本阅读界面"></a> |
+| **CG 鉴赏与差分浏览** | **阅读菜单** |
+| <a href="docs/screenshots/v0.2.1/cg-appreciation.png"><img src="docs/screenshots/v0.2.1/cg-appreciation.png" width="216" alt="CG 鉴赏界面，点击切换同场景差分"></a> | <a href="docs/screenshots/v0.2.1/reading-menu.png"><img src="docs/screenshots/v0.2.1/reading-menu.png" width="216" alt="墨绿色阅读菜单"></a> |
+| **章节选择** | **阅读设置** |
+| <a href="docs/screenshots/v0.2.1/chapter-selection.png"><img src="docs/screenshots/v0.2.1/chapter-selection.png" width="216" alt="后日谈章节选择界面"></a> | <a href="docs/screenshots/v0.2.1/settings.png"><img src="docs/screenshots/v0.2.1/settings.png" width="216" alt="CONFIG 字号与文字显示速度设置"></a> |
+
+点击图片可查看原尺寸 PNG；全部文件位于 [截图目录](docs/screenshots/v0.2.1/)。
+
 ## 合并内容与界面
 
 - 正篇保留 51 个源剧情文件的 **9,424 段中文文本**与 **21 个章节入口**。原有 30 个剧情块文件逐字节保持不变，章节编号及存储键延续旧版。
