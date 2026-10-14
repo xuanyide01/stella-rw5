@@ -1,0 +1,41 @@
+{
+  "result": "passed",
+  "sourceBounds": [
+    394,
+    5,
+    1872,
+    1072
+  ],
+  "sourceSize": [
+    1478,
+    1067
+  ],
+  "displaySize": [
+    420,
+    303
+  ],
+  "position": [
+    6,
+    211
+  ],
+  "allOriginalConnectedHeroinePixelsPreservedBeforeScaling": true,
+  "noRectangularCutThroughClothing": true,
+  "sourceAspectRatio": 1.3851921274601686,
+  "displayAspectRatio": 1.386138613861386,
+  "allSilhouetteInsideScreen": true,
+  "bottomTouchesScreen": true,
+  "nativeTitleEvidence": "exact current package",
+  "nativeRGB565PatchDifference99Percentile": 6.0,
+  "nativePatch": [
+    270,
+    240,
+    426,
+    460
+  ],
+  "changedRuntimeSourceFiles": [
+    "src/manifest.json",
+    "src/common/ui/title.jpg"
+  ],
+  "allStoryChoicesPortraitsCGFontsAndPageCodeUnchanged": true,
+  "physicalDeviceTested": false
+}

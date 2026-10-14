@@ -1,8 +1,8 @@
 {
   "package": "com.codex.stella.rw5",
   "name": "星之终途",
-  "versionName": "0.2.1",
-  "versionCode": 3,
+  "versionName": "0.2.3",
+  "versionCode": 5,
   "minPlatformVersion": 1000,
   "minAPILevel": 1,
   "icon": "/common/logo.png",

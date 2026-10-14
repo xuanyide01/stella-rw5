@@ -1,0 +1,18 @@
+{
+  "result": "passed",
+  "version": "0.2.3",
+  "packageSha256": "53279a48c9da4479baa15d4b58bd6b5b91f6c198a02e3092295fe66f49fb879a",
+  "screen": [
+    432,
+    514
+  ],
+  "runtime": "official generic vela-watch-5.0 simulator, not physical target firmware",
+  "physicalDeviceTested": false,
+  "checks": [
+    "complete title artwork renders at target dimensions",
+    "START reading, menu, LOAD slot list and EXTRA CG render",
+    "EXIT tears down and title reopens",
+    "existing main clear flag retains first AFTER STORY entry"
+  ],
+  "scope": "title-art update smoke test; 17 automated story/choice/save tests also passed; earlier full game-flow native reports are historical"
+}

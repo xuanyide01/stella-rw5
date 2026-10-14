@@ -4,7 +4,7 @@ import hashlib
 import json
 import os
 import io
-from PIL import Image, ImageOps, ImageDraw
+from PIL import Image, ImageOps, ImageDraw, ImageChops
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT.parent / 'stella-after-probe/original-ui/pc/cn'
@@ -34,11 +34,24 @@ def read(name):
 # char01 sits to the right, below the logo. No opaque menu panel is painted in.
 sky = ImageOps.fit(read('title/bg.png'), (432, 514), Image.Resampling.LANCZOS, centering=(.63, .45))
 hero = read('title/char01.png')
-hero = hero.crop((900, 0, hero.width, hero.height))
-hero = hero.crop(hero.getchannel('A').getbbox())
-hero_height = 370
-hero = hero.resize((round(hero.width * hero_height / hero.height), hero_height), Image.Resampling.LANCZOS)
-hero_position = (160, 514 - hero.height)
+# The original layer also contains the traveller. Follow the heroine's original
+# alpha-connected silhouette instead of cutting at x=900 through her cloak.
+original_alpha = hero.getchannel('A')
+connected = original_alpha.point(lambda value: 255 if value > 0 else 0)
+assert connected.getpixel((1350, 240)) == 255
+ImageDraw.floodfill(connected, (1350, 240), 128)
+heroine_mask = connected.point(lambda value: 255 if value == 128 else 0)
+source_bounds = heroine_mask.getbbox()
+assert source_bounds == (394, 5, 1872, 1072)
+hero.putalpha(ImageChops.multiply(original_alpha, heroine_mask))
+hero = hero.crop(source_bounds)
+source_size = hero.size
+# Fit the COMPLETE silhouette horizontally, preserving one common scale.
+hero_width = 432 - 12
+hero = hero.resize((hero_width, round(source_size[1] * hero_width / source_size[0])), Image.Resampling.LANCZOS)
+hero_position = (6, 514 - hero.height)
+assert hero_position[0] >= 0 and hero_position[0] + hero.width <= 432
+assert hero_position[1] >= 0 and hero_position[1] + hero.height == 514
 sky.alpha_composite(hero, hero_position)
 sky.convert('RGB').save(UI / 'title.jpg', quality=89, optimize=True)
 logo = read('title/logo.png')
@@ -141,7 +154,10 @@ for y in range(0, 514, 32):
     draw.line((0, y, 432, y), fill='#e8efeb')
 system.save(UI / 'system.png', optimize=True)
 report = {'theme': 'original sky and normal-title character on right; white / forest green system panels',
-          'titleBackground': 'Original sky and char01 heroine crop; enlarged on right, below logo and touching bottom',
+          'titleBackground': 'Original sky and complete char01 heroine silhouette; original aspect ratio, right-side face, touching bottom',
+          'titleHeroineSourceBounds': list(source_bounds), 'titleHeroineSourceSize': list(source_size),
+          'titleHeroineSelection': 'Entire alpha-connected original heroine, no rectangular cut through clothing',
+          'titleHeroineFullyInsideScreen': True, 'titleHeroineUniformScale': True,
           'titleHeroinePosition': list(hero_position), 'titleHeroineSize': list(hero.size),
           'titleHeroineBottom': hero_position[1] + hero.height,
           'titleMenuBackground': 'transparent; no white panel or panel decoration',
