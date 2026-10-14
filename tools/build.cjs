@@ -11,13 +11,13 @@ const {compile}=require(path.join(toolkit,'lib/commands/compile'));
  const result=await compile('native',process.argv.includes('--development')?'dev':'prod',false,{signMode:'BUILD'});
  if(result.compileError||result.stats.hasErrors())throw Error('Compatible compiler failed');
  const watchManifest=path.resolve('build/manifest-watch.json');
- if(!fs.existsSync(watchManifest)||JSON.parse(fs.readFileSync(watchManifest,'utf8')).package!=='com.codex.stella.rw5')throw Error('Watch-specific manifest was not generated correctly');
+ if(!fs.existsSync(watchManifest)||JSON.parse(fs.readFileSync(watchManifest,'utf8')).package!=='com.codex.stella.band8pro')throw Error('Watch-specific manifest was not generated correctly');
  const manifest=JSON.parse(fs.readFileSync('src/manifest.json','utf8'));
  const name=manifest.package+'.debug.'+manifest.versionName+'.rpk',file=path.join('dist',name);
  if(!fs.existsSync(file))throw Error('Current-version package was not produced');
  // Use the release wrapping that resolved the earlier Summer Pockets install issue.
  const packaging=await require('./repack-rpk.cjs').repackRpk(file,file,toolkit);
  console.log('R1_PACKAGING',JSON.stringify(packaging));
- const bytes=fs.statSync(file).size;if(bytes>15000000)throw Error('Package exceeds the 15,000,000-byte cap: '+bytes);
+ const bytes=fs.statSync(file).size;if(bytes>10000000)throw Error('Light package exceeds the 10,000,000-byte cap: '+bytes);
  console.log('BUILD_OUTPUT',name,bytes);
 })().catch(e=>{console.error(e);process.exitCode=1;});

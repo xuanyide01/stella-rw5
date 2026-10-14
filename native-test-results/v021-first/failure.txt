@@ -1,6 +1,0 @@
-AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
-
-  assert.ok(!/STELLA_RW5 error|STELLA_RW5 background failed|ASSERTION FAILED|PANIC!!!|coredump/.test(recent))
-
-    at <workspace>\work\stella-rw5\tools\native-ui-check.cjs:49:42
-    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)

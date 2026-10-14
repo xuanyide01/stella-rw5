@@ -4,7 +4,7 @@ import hashlib
 import json
 import os
 import io
-from PIL import Image, ImageOps, ImageDraw
+from PIL import Image, ImageOps, ImageDraw, ImageChops
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT.parent / 'stella-after-probe/original-ui/pc/cn'
@@ -32,18 +32,31 @@ def read(name):
 
 # The requested normal title illustration is independently fitted to the watch;
 # char01 sits to the right, below the logo. No opaque menu panel is painted in.
-sky = ImageOps.fit(read('title/bg.png'), (432, 514), Image.Resampling.LANCZOS, centering=(.63, .45))
+sky = ImageOps.fit(read('title/bg.png'), (336, 480), Image.Resampling.LANCZOS, centering=(.63, .45))
 hero = read('title/char01.png')
-hero = hero.crop((900, 0, hero.width, hero.height))
-hero = hero.crop(hero.getchannel('A').getbbox())
-hero_height = 370
-hero = hero.resize((round(hero.width * hero_height / hero.height), hero_height), Image.Resampling.LANCZOS)
-hero_position = (160, 514 - hero.height)
+# The original layer also contains the traveller. Follow the heroine's original
+# alpha-connected silhouette instead of cutting at x=900 through her cloak.
+original_alpha = hero.getchannel('A')
+connected = original_alpha.point(lambda value: 255 if value > 0 else 0)
+assert connected.getpixel((1350, 240)) == 255
+ImageDraw.floodfill(connected, (1350, 240), 128)
+heroine_mask = connected.point(lambda value: 255 if value == 128 else 0)
+source_bounds = heroine_mask.getbbox()
+assert source_bounds == (394, 5, 1872, 1072)
+hero.putalpha(ImageChops.multiply(original_alpha, heroine_mask))
+hero = hero.crop(source_bounds)
+source_size = hero.size
+# Fit the COMPLETE silhouette horizontally, preserving one common scale.
+hero_width = 336 - 12
+hero = hero.resize((hero_width, round(source_size[1] * hero_width / source_size[0])), Image.Resampling.LANCZOS)
+hero_position = (6, 480 - hero.height)
+assert hero_position[0] >= 0 and hero_position[0] + hero.width <= 336
+assert hero_position[1] >= 0 and hero_position[1] + hero.height == 480
 sky.alpha_composite(hero, hero_position)
 sky.convert('RGB').save(UI / 'title.jpg', quality=89, optimize=True)
 logo = read('title/logo.png')
 logo = logo.crop(logo.getchannel('A').getbbox())
-logo.thumbnail((352, 135), Image.Resampling.LANCZOS)
+logo.thumbnail((292, 112), Image.Resampling.LANCZOS)
 logo.save(UI / 'title-logo.png', optimize=True)
 
 sheet = read('title/btn.png')
@@ -123,25 +136,28 @@ for char in word:
 write_button('after', raw)
 assert set(button_lefts.values()) == {0}
 
-art = Image.new('RGB', (432, 286))
+art = Image.new('RGB', (336, 240))
 draw = ImageDraw.Draw(art)
-for y in range(286):
+for y in range(240):
     # Match both letterbox edges to the dialogue's solid, muted forest green.
-    t = 1 - abs(2 * y / 285 - 1)
+    t = 1 - abs(2 * y / 239 - 1)
     color = tuple(round(a + (b - a) * t) for a, b in zip((55, 107, 94), (17, 62, 53)))
-    draw.line((0, y, 431, y), fill=color)
+    draw.line((0, y, 335, y), fill=color)
 art.save(UI / 'art-fill.png', optimize=True)
 # Kept for reproducible historical paths; current panel uses its CSS solid color.
-Image.new('RGB', (432, 228), '#376b5e').save(UI / 'dialogue.png', optimize=True)
-system = Image.new('RGB', (432, 514), '#f4f8f5')
+Image.new('RGB', (336, 240), '#376b5e').save(UI / 'dialogue.png', optimize=True)
+system = Image.new('RGB', (336, 480), '#f4f8f5')
 draw = ImageDraw.Draw(system)
-for x in range(18, 432, 32):
-    draw.line((x, 0, x, 514), fill='#e8efeb')
-for y in range(0, 514, 32):
-    draw.line((0, y, 432, y), fill='#e8efeb')
+for x in range(16, 336, 28):
+    draw.line((x, 0, x, 480), fill='#e8efeb')
+for y in range(0, 480, 28):
+    draw.line((0, y, 336, y), fill='#e8efeb')
 system.save(UI / 'system.png', optimize=True)
 report = {'theme': 'original sky and normal-title character on right; white / forest green system panels',
-          'titleBackground': 'Original sky and char01 heroine crop; enlarged on right, below logo and touching bottom',
+          'titleBackground': 'Original sky and complete char01 heroine silhouette; original aspect ratio, right-side face, touching bottom',
+          'titleHeroineSourceBounds': list(source_bounds), 'titleHeroineSourceSize': list(source_size),
+          'titleHeroineSelection': 'Entire alpha-connected original heroine, no rectangular cut through clothing',
+          'titleHeroineFullyInsideScreen': True, 'titleHeroineUniformScale': True,
           'titleHeroinePosition': list(hero_position), 'titleHeroineSize': list(hero.size),
           'titleHeroineBottom': hero_position[1] + hero.height,
           'titleMenuBackground': 'transparent; no white panel or panel decoration',
@@ -152,6 +168,6 @@ report = {'theme': 'original sky and normal-title character on right; white / fo
           'titleLeftAlignment': True, 'titleLabels': ['AFTER STORY', 'START', 'CHAPTER', 'LOAD', 'CONFIG', 'EXTRA', 'EXIT'],
           'afterStoryUnlock': 'sf.stella_main_clear; completed START flow; hidden and menu collapses before clear',
           'originalResourceSHA256': originals, 'titleButtonOrigins': 'Six original raster button rows; AFTER STORY assembled from their glyphs plus Y from the original YES dialog.',
-          'screen': [432, 514], 'uiAssetBytes': sum(path.stat().st_size for path in UI.iterdir())}
+          'screen': [336, 480], 'uiAssetBytes': sum(path.stat().st_size for path in UI.iterdir())}
 (ROOT / 'reports/ui-remake.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', 'utf8')
 print(json.dumps(report, ensure_ascii=False))

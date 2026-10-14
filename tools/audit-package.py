@@ -10,9 +10,9 @@ from rpk_signature import audit
 manifest=json.loads((root/'src/manifest.json').read_text('utf8'))
 package=root/'dist'/f'{manifest["package"]}.debug.{manifest["versionName"]}.rpk'
 report=audit(package)
-assert report['bytes']<=15000000
+assert report['bytes']<=10000000
 z=zipfile.ZipFile(package)
-assert json.loads(z.read('manifest.json'))['package']=='com.codex.stella.rw5'
+assert json.loads(z.read('manifest.json'))['package']=='com.codex.stella.band8pro'
 watch=json.loads(z.read('manifest-watch.json'))
 assert watch==manifest,'Watch-specific manifest does not match the source manifest'
 images=0;pngs=0

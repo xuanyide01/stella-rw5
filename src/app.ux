@@ -1,7 +1,7 @@
 <script>
 export default {
-  onCreate() { console.log('STELLA_RW5 app created'); },
-  onDestroy() { console.log('STELLA_RW5 app destroyed'); }
+  onCreate() { console.log('STELLA_BAND8PRO app created'); },
+  onDestroy() { console.log('STELLA_BAND8PRO app destroyed'); }
 }
 </script>
 

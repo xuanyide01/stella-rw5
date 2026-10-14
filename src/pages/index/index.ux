@@ -1,6 +1,6 @@
 <template>
   <div class="page" onswipe="swipe">
-    <image class="system-backdrop" src="/common/ui/system.png"></image>
+    <image if="{{mode !== 'title' && mode !== 'play' && mode !== 'cg'}}" class="system-backdrop" src="/common/ui/system.png"></image>
     <div if="{{mode === 'title'}}" class="title-screen">
       <image class="title-art" src="/common/ui/title.jpg" onerror="backgroundError" oncomplete="backgroundLoaded"></image>
       <image class="title-logo" src="/common/ui/title-logo.png"></image>
@@ -24,13 +24,13 @@
     </div>
     <div if="{{mode === 'play'}}" class="dialogue-panel">
       <div class="dialogue-edge"></div>
-      <div class="speaker-row"><text class="speaker" style="font-family: {{speakerFont}};">{{speaker}}</text><text class="chapter" style="font-family: {{chapterFont}};">{{chapterLabel}}</text></div>
-      <scroll id="dialogue-scroll" class="dialogue-scroll" scroll-y="true" ontouchstart="dialogueTouchStart" ontouchmove="dialogueTouchMove" onscroll="dialogueScrolled" onclick="dialogueTap"><text class="dialogue" style="font-size: {{fontSize}}px;font-family: {{dialogueFont}};">{{displayText}}</text></scroll>
+      <div class="speaker-row"><text if="{{speakerFont !== 'stellaextra'}}" class="speaker">{{speaker}}</text><text if="{{speakerFont === 'stellaextra'}}" class="speaker" style="font-family:stellaextra;">{{speaker}}</text><text if="{{chapterFont !== 'stellaextra'}}" class="chapter">{{chapterLabel}}</text><text if="{{chapterFont === 'stellaextra'}}" class="chapter" style="font-family:stellaextra;">{{chapterLabel}}</text></div>
+      <scroll id="dialogue-scroll" class="dialogue-scroll" scroll-y="true" ontouchstart="dialogueTouchStart" ontouchmove="dialogueTouchMove" onscroll="dialogueScrolled" onclick="dialogueTap"><text if="{{dialogueFont !== 'stellaextra'}}" class="dialogue" style="font-size: {{fontSize}}px;">{{displayText}}</text><text if="{{dialogueFont === 'stellaextra'}}" class="dialogue" style="font-size: {{fontSize}}px;font-family:stellaextra;">{{displayText}}</text></scroll>
       <div class="toolbar"><text class="tool" onclick="goBack">上一句</text><text class="tool" onclick="showMenu">菜单</text><text class="tool" onclick="advance">下一句 ›</text></div>
     </div>
     <div if="{{mode === 'choice'}}" class="choice-panel">
       <text class="choice-title">选择下一步</text>
-      <scroll class="choice-list" scroll-y="true"><text for="{{options}}" tid="text" class="choice" style="font-family: {{$item.font}};" onclick="pick($idx)">{{$item.text}}</text></scroll>
+      <scroll class="choice-list" scroll-y="true"><div for="{{options}}" tid="text"><text if="{{$item.font !== 'stellaextra'}}" class="choice" onclick="pick($idx)">{{$item.text}}</text><text if="{{$item.font === 'stellaextra'}}" class="choice" onclick="pick($idx)" style="font-family:stellaextra;">{{$item.text}}</text></div></scroll>
       <text class="small-action" onclick="showMenu">菜单</text>
     </div>
     <div if="{{mode === 'menu'}}" class="overlay">
@@ -51,8 +51,8 @@
       <text class="menu-action muted" onclick="toTitle">返回标题</text>
     </div>
     <div if="{{mode === 'routes' || mode === 'chapters'}}" class="full-panel">
-      <text class="panel-title">{{browseTitle}}</text><text class="panel-subtitle" style="font-family: {{browseFont}};">{{browseLabel}}</text>
-      <div class="slot-list"><div for="{{browseRows}}" tid="key" class="slot-card" onclick="selectBrowse($idx)"><text class="slot-title" style="font-family: {{$item.font}};">{{$item.name}}</text><text class="slot-meta">{{$item.detail}}</text></div></div>
+      <text class="panel-title">{{browseTitle}}</text><text if="{{browseFont !== 'stellaextra'}}" class="panel-subtitle">{{browseLabel}}</text><text if="{{browseFont === 'stellaextra'}}" class="panel-subtitle" style="font-family:stellaextra;">{{browseLabel}}</text>
+      <div class="slot-list"><div for="{{browseRows}}" tid="key" class="slot-card" onclick="selectBrowse($idx)"><text if="{{$item.font !== 'stellaextra'}}" class="browse-name">{{$item.name}}</text><text if="{{$item.font === 'stellaextra'}}" class="browse-name" style="font-family:stellaextra;">{{$item.name}}</text><text class="slot-meta">{{$item.detail}}</text></div></div>
       <div class="pager"><text class="pager-action" onclick="previousBrowse">‹ 上一页</text><text class="pager-action" onclick="closeBrowse">返回</text><text class="pager-action" onclick="nextBrowse">下一页 ›</text></div>
     </div>
     <div if="{{mode === 'slots'}}" class="full-panel">
@@ -60,24 +60,24 @@
       <text class="panel-subtitle">{{slotPageLabel}}</text>
       <div class="slot-list">
         <div for="{{slotRows}}" tid="number" class="slot-card" style="background-color: {{$item.occupied ? '#dceae3' : '#edf3ef'}};" onclick="selectSlot($item.index)">
-          <text class="slot-title">{{$item.title}}</text><text class="slot-meta" style="font-family: {{$item.metaFont}};">{{$item.meta}}</text><text class="slot-preview" style="font-family: {{$item.previewFont}};">{{$item.preview}}</text>
+          <text class="slot-title">{{$item.title}}</text><text if="{{$item.metaFont !== 'stellaextra'}}" class="slot-meta">{{$item.meta}}</text><text if="{{$item.metaFont === 'stellaextra'}}" class="slot-meta" style="font-family:stellaextra;">{{$item.meta}}</text><text if="{{$item.previewFont !== 'stellaextra'}}" class="slot-preview">{{$item.preview}}</text><text if="{{$item.previewFont === 'stellaextra'}}" class="slot-preview" style="font-family:stellaextra;">{{$item.preview}}</text>
         </div>
       </div>
       <div class="pager"><text class="pager-action" onclick="previousSlotPage">‹ 上一页</text><text class="pager-action" onclick="closeSlots">返回</text><text class="pager-action" onclick="nextSlotPage">下一页 ›</text></div>
     </div>
     <div if="{{mode === 'overwrite'}}" class="overlay">
       <text class="menu-title">{{overwriteTitle}}</text>
-      <text class="confirm-text" style="font-family: {{overwriteFont}};">{{overwriteDetail}}</text>
+      <text if="{{overwriteFont !== 'stellaextra'}}" class="confirm-text">{{overwriteDetail}}</text><text if="{{overwriteFont === 'stellaextra'}}" class="confirm-text" style="font-family:stellaextra;">{{overwriteDetail}}</text>
       <text class="menu-action" onclick="confirmOverwrite">确认覆盖</text><text class="menu-action muted" onclick="cancelOverwrite">取消</text>
     </div>
     <div if="{{mode === 'gallery'}}" class="full-panel">
       <text class="panel-title">CG 鉴赏</text><text class="panel-subtitle">{{galleryPageLabel}}</text>
-      <div class="gallery-row"><div for="{{galleryTop}}" tid="image" class="gallery-card" onclick="viewCg($item.index)"><image class="gallery-thumb" src="{{$item.src}}"></image><text class="gallery-caption" style="font-family: {{$item.font}};">{{$item.label}}</text></div></div>
-      <div class="gallery-row"><div for="{{galleryBottom}}" tid="image" class="gallery-card" onclick="viewCg($item.index)"><image class="gallery-thumb" src="{{$item.src}}"></image><text class="gallery-caption" style="font-family: {{$item.font}};">{{$item.label}}</text></div></div>
+      <div class="gallery-row"><div for="{{galleryTop}}" tid="image" class="gallery-card" onclick="viewCg($item.index)"><image class="gallery-thumb" src="{{$item.src}}"></image><text if="{{$item.font !== 'stellaextra'}}" class="gallery-caption">{{$item.label}}</text><text if="{{$item.font === 'stellaextra'}}" class="gallery-caption" style="font-family:stellaextra;">{{$item.label}}</text></div></div>
+      <div class="gallery-row"><div for="{{galleryBottom}}" tid="image" class="gallery-card" onclick="viewCg($item.index)"><image class="gallery-thumb" src="{{$item.src}}"></image><text if="{{$item.font !== 'stellaextra'}}" class="gallery-caption">{{$item.label}}</text><text if="{{$item.font === 'stellaextra'}}" class="gallery-caption" style="font-family:stellaextra;">{{$item.label}}</text></div></div>
       <div class="pager"><text class="pager-action" onclick="previousGalleryPage">‹ 上一页</text><text class="pager-action" onclick="toTitle">返回标题</text><text class="pager-action" onclick="nextGalleryPage">下一页 ›</text></div>
     </div>
     <div if="{{mode === 'cg'}}" class="cg-panel">
-      <image class="cg-image" src="{{cgSrc}}" onclick="cycleCg"></image><text class="cg-caption" style="font-family: {{cgFont}};">{{cgLabel}}</text>
+      <image class="cg-image" src="{{cgSrc}}" onclick="cycleCg"></image><text if="{{cgFont !== 'stellaextra'}}" class="cg-caption">{{cgLabel}}</text><text if="{{cgFont === 'stellaextra'}}" class="cg-caption" style="font-family:stellaextra;">{{cgLabel}}</text>
       <div class="cg-controls"><text class="pager-action" onclick="previousCg">‹ 上一组</text><text class="pager-action" onclick="backToGallery">返回列表</text><text class="pager-action" onclick="nextCg">下一组 ›</text></div>
     </div>
     <div if="{{mode === 'end'}}" class="end-panel"><text class="game-title">{{endingLabel}}</text><text class="subtitle">故事阅读完毕</text><text class="action" onclick="toTitle">返回标题</text></div>
@@ -99,30 +99,30 @@ import {portraitBox} from '../../common/portrait-layout.js';
 import {PROGRESS_KEY,emptyProgress,decodeProgress,progressFromState,withProgress} from '../../common/progress.js';
 export default {
   private:{mode:'title',backgroundSrc:'/common/title_bg.png',bodySrc:'',bodySecond:'',bodyThird:'',portraitWidth:200,portraitLeft:116,portraitSecondLeft:216,speaker:'',displayText:'',chapterLabel:'',speakerFont:'sans-serif',dialogueFont:'sans-serif',chapterFont:'sans-serif',browseFont:'sans-serif',overwriteFont:'sans-serif',cgFont:'sans-serif',
-    options:[],loading:false,errorText:'',hasNextChapter:true,afterUnlocked:false,fontSize:24,textSpeed:30,speedLabel:'显示速度：逐字',fontLabel:'字号：标准',progressLabel:'红米手表 5 · 图文版',
-    portraitHeight:286,portraitTop:0,portraitSecondWidth:200,portraitSecondHeight:286,portraitSecondTop:0,portraitThirdWidth:144,portraitThirdHeight:286,portraitThirdTop:0,portraitThirdLeft:288,
+    options:[],loading:false,errorText:'',hasNextChapter:true,afterUnlocked:false,fontSize:22,textSpeed:30,speedLabel:'显示速度：逐字',fontLabel:'字号：标准',progressLabel:'小米手环 8 Pro · 图文版',
+    portraitHeight:240,portraitTop:0,portraitSecondWidth:200,portraitSecondHeight:240,portraitSecondTop:0,portraitThirdWidth:144,portraitThirdHeight:240,portraitThirdTop:0,portraitThirdLeft:288,
     slotTitle:'',slotPage:0,slotPageLabel:'',slotRows:[],storageBusy:false,overwriteTitle:'',overwriteDetail:'',endingLabel:'本篇阅读完毕',
     galleryPage:0,galleryPageLabel:'',galleryTop:[],galleryBottom:[],cgIndex:0,cgVariant:0,cgSrc:'',cgLabel:'',browseRows:[],browseTitle:'',browseLabel:'',browsePage:0},
   onInit(){
     this.session=newState();this.cachedChapter=0;this.ops=[];this.loadSequence=0;this.timer=null;this.fullText='';this.resumeMode='play';
     this._slotsSequence=0;this._gallerySequence=0;this._slotData=[];this._galleryCatalog=[];this._galleryTotal=0;this._slotsReturnMode='title';this._slotRole='load';
     this._progress=emptyProgress();this._progressWriteBusy=false;this._progressDirty=false;this._progressReady=false;this.loading=true;
-    storage.get({complete:()=>{},key:'stella_rw5_settings_v1',success:data=>{try{const s=JSON.parse(data);this.fontSize=s.fontSize===28?28:24;this.textSpeed=s.textSpeed===0?0:30;this.refreshSettings();}catch(e){}},fail:()=>{}});
+    storage.get({complete:()=>{},key:'stella_band8pro_settings_v1',success:data=>{try{const s=JSON.parse(data);this.fontSize=s.fontSize===26?26:22;this.textSpeed=s.textSpeed===0?0:30;this.refreshSettings();}catch(e){}},fail:()=>{}});
     this.readProgress();
-    console.log('STELLA_RW5 title ready');
+    console.log('STELLA_BAND8PRO title ready');
   },
-  backgroundLoaded(){console.log('STELLA_RW5 background loaded',this.mode,this.backgroundSrc);},
-  backgroundError(){console.log('STELLA_RW5 background failed',this.mode,this.backgroundSrc);},
+  backgroundLoaded(){console.log('STELLA_BAND8PRO background loaded',this.mode,this.backgroundSrc);},
+  backgroundError(){console.log('STELLA_BAND8PRO background failed',this.mode,this.backgroundSrc);},
   clearTyping(){if(this.timer!==null){clearTimeout(this.timer);this.timer=null;}},
   onShow(){this._hidden=false;if(this._chapterSkip&&this.timer===null)this.renderFrame();},
     onHide(){this._hidden=true;this.clearTyping();if(!this._chapterSkip&&this.mode==='play')this.displayText=this.fullText;},
   onDestroy(){this.clearTyping();this.loadSequence++;this._slotsSequence++;this._gallerySequence++;},
   readProgress(){this.loading=true;storage.get({complete:()=>{},key:PROGRESS_KEY,default:'',success:data=>{try{this._progress=decodeProgress(data);this._progressReady=true;this.refreshProgress();this.loading=false;}catch(e){this.fail(e.message);}},fail:()=>{this.fail('通关记录读取失败，请返回标题重试');}});},
-  startAfterStory(){if(this.loading||!this._progressReady)return;if(!this.afterUnlocked){this.toast('请先完成正篇');return;}this.clearTyping();this._chapterSkip=null;this.session=withProgress(newState(catalog.afterInitial,true),this._progress);this.cachedChapter=0;this._autoHops=0;console.log('STELLA_RW5 after story start');this.renderFrame();},
+  startAfterStory(){if(this.loading||!this._progressReady)return;if(!this.afterUnlocked){this.toast('请先完成正篇');return;}this.clearTyping();this._chapterSkip=null;this.session=withProgress(newState(catalog.afterInitial,true),this._progress);this.cachedChapter=0;this._autoHops=0;console.log('STELLA_BAND8PRO after story start');this.renderFrame();},
   openSettings(){if(this.loading)return;this.clearTyping();this.refreshSettings();this.mode='settings';},
   exitApplication(){this._chapterSkip=null;this.clearTyping();this.loadSequence++;this._slotsSequence++;this._gallerySequence++;this.$app.exit();},
   startNew(){if(this.loading||!this._progressReady)return;this.clearTyping();this.session=withProgress(newState(catalog.flowScene,true),this._progress);this.cachedChapter=0;this._autoHops=0;this.renderFrame();},
-  refreshProgress(){this.progressLabel='红米手表 5 · 图文版';this.afterUnlocked=!!this._progress.variables['sf.stella_main_clear'];},
+  refreshProgress(){this.progressLabel='小米手环 8 Pro · 图文版';this.afterUnlocked=!!this._progress.variables['sf.stella_main_clear'];},
   syncProgress(){
     if(!this._progressReady||this.session.progression!=='story')return;const progress=progressFromState(this.session);
     if(JSON.stringify(progress)===JSON.stringify(this._progress))return;
@@ -138,7 +138,7 @@ export default {
   visibleText(text){return String(text||'').replace(/・/g,'·');},
   characterName(name){return name;},
   visibleOptions(items){return items.map(item=>{const text=this.visibleText(item.text);return Object.assign({},item,{text,font:textFont(text)});});},
-  refreshBrowse(){const routes=this.mode==='routes';this._browseItems=routes?(this.afterUnlocked?catalog.routes:catalog.routes.slice(0,1)):catalog.chapters.filter(x=>x.route===this._browseRoute);this.browseTitle=routes?'选择路线':'选择章节';const start=this.browsePage*4;this.browseRows=this._browseItems.slice(start,start+4).map((item,i)=>({key:(routes?'route:':'chapter:'+this._browseRoute+':')+(start+i),index:start+i,name:this.visibleText(item.name),font:textFont(item.name),detail:routes?item.scenes.length+' 个章节':'点击开始阅读'}));this.browseLabel=(routes?'章节阅读 · ':this.visibleText(catalog.routes[this._browseRoute].name)+' · ')+(this.browsePage+1)+' / '+Math.ceil(this._browseItems.length/4);this.browseFont=textFont(this.browseLabel);},
+  refreshBrowse(){const routes=this.mode==='routes';this._browseItems=routes?(this.afterUnlocked?catalog.routes:catalog.routes.slice(0,1)):catalog.chapters.filter(x=>x.route===this._browseRoute);this.browseTitle=routes?'选择路线':'选择章节';const start=this.browsePage*4;this.browseRows=this._browseItems.slice(start,start+4).map((item,i)=>({key:(routes?'route:':'chapter:'+this._browseRoute+':')+(start+i),index:start+i,name:this.visibleText(item.name),font:textFont(item.name),detail:routes?item.scenes.length+' 个章节':'点击开始阅读'}));this.browseLabel=(routes?'章节阅读 · ':(this._browseRoute===0?'正篇':'后日谈')+' · ')+(this.browsePage+1)+' / '+Math.ceil(this._browseItems.length/4);this.browseFont=textFont(this.browseLabel);},
   previousBrowse(){if(this.browsePage>0){this.browsePage--;this.refreshBrowse();}},
   nextBrowse(){if(this.browsePage<Math.ceil(this._browseItems.length/4)-1){this.browsePage++;this.refreshBrowse();}},
   selectBrowse(row){const index=this.browsePage*4+row;if(!this._browseItems[index])return;if(this.mode==='routes'){this._browseRoute=index;this.browsePage=0;this.mode='chapters';this.refreshBrowse();return;}const item=this._browseItems[index];this.session=withProgress(newState(item.id),this._progress);this.cachedChapter=0;this._autoHops=0;this.renderFrame();},
@@ -169,12 +169,12 @@ export default {
         this.portraitThirdWidth=third.width;this.portraitThirdHeight=third.height;this.portraitThirdTop=third.top;this.portraitThirdLeft=third.left;
         this.chapterLabel=this.visibleText(catalog.scenes[String(this.session.rootChapter)].name);this.chapterFont=textFont(this.chapterLabel);this.hasNextChapter=!this.session.ended;
         if(f.type==='map'){this.renderMap(f);return;}
-        if(f.type==='choice'){this.options=this.visibleOptions(f.items);this.mode='choice';console.log('STELLA_RW5 choice',this.session.chapter,this.session.cursor);return;}
-        if(f.type==='end'){if(this.session.chapter===21&&this.session.progression==='story'){this.session.variables['sf.stella_main_clear']=true;this.syncProgress();console.log('STELLA_RW5 after story unlocked');}this.endingLabel=(catalog.endings[String(this.session.chapter)]||'本篇')+' · 阅读完毕';console.log('STELLA_RW5 ending',this.session.chapter,this.endingLabel);if(this.session.chapter>=101){this.toTitle();return;}this.mode='end';return;}
+        if(f.type==='choice'){this.options=this.visibleOptions(f.items);this.mode='choice';console.log('STELLA_BAND8PRO choice',this.session.chapter,this.session.cursor);return;}
+        if(f.type==='end'){if(this.session.chapter===21&&this.session.progression==='story'){this.session.variables['sf.stella_main_clear']=true;this.syncProgress();console.log('STELLA_BAND8PRO after story unlocked');}this.endingLabel=(catalog.endings[String(this.session.chapter)]||'本篇')+' · 阅读完毕';console.log('STELLA_BAND8PRO ending',this.session.chapter,this.endingLabel);if(this.session.chapter>=101){this.toTitle();return;}this.mode='end';return;}
         this.mode='play';this.speaker=this.characterName(this.visibleText(f.speaker));this.fullText=this.visibleText(f.text).replace(/(^|\n)[ \t\u3000]{3,}/g,'$1');this.speakerFont=textFont(this.speaker);this.dialogueFont=textFont(this.fullText);this.displayText='';
         this._dialogueDragged=false;this._dialogueTouch=null;
         try{this.$element('dialogue-scroll').scrollTo({top:0,behavior:'instant'});}catch(e){}
-        console.log('STELLA_RW5 frame',this.session.chapter,this.session.cursor);
+        console.log('STELLA_BAND8PRO frame',this.session.chapter,this.session.cursor);
         if(this.textSpeed===0){this.displayText=this.fullText;return;}
         const tick=()=>{this.displayText=this.fullText.slice(0,this.displayText.length+1);if(this.displayText.length<this.fullText.length)this.timer=setTimeout(tick,this.textSpeed);else this.timer=null;};tick();
       }catch(e){this.fail(e.message);}
@@ -184,12 +184,12 @@ export default {
   dialogueTouchStart(event){const touch=event.touches&&event.touches[0];this._dialogueDragged=false;this._dialogueTouch=touch?{x:touch.pageX,y:touch.pageY}:null;},
   dialogueTouchMove(event){const touch=event.touches&&event.touches[0],start=this._dialogueTouch;if(touch&&start&&(Math.abs(touch.pageX-start.x)>10||Math.abs(touch.pageY-start.y)>10))this._dialogueDragged=true;},
   dialogueTap(){if(this._dialogueDragged)return;this.advance();},
-  dialogueScrolled(event){console.log('STELLA_RW5 dialogue scroll',this.session.chapter,this.session.cursor,event.scrollY);},
-  renderMap(frame){this.loading=true;const seq=++this.loadSequence;file.readText({complete:()=>{},uri:'/common/map-preview.txt',success:data=>{if(seq!==this.loadSequence)return;try{const choices=previewMap(JSON.parse(data.text),this.session,frame);if(!choices.length)throw new Error('此地图阶段暂无支持的剧情选项，请返回标题选择其他篇章');this.options=this.visibleOptions(choices);this.mode='choice';this.loading=false;console.log('STELLA_RW5 map ready',this.session.chapter,this.session.cursor,choices.map(x=>x.value).join(','));}catch(e){this.fail(e.message);}},fail:()=>{if(seq===this.loadSequence)this.fail('地图选项读取失败');}});},
-  goNextChapter(){if(this.loading||this.mode!=='menu')return;if(this.resumeMode==='choice'){this.mode='choice';this.toast('请先作出当前选择');return;}this.clearTyping();this._chapterSkip=nextChapter(this.session);if(!this._chapterSkip){this.toast('本篇已结束');return;}this._autoHops=0;this.loading=true;this.renderFrame();console.log('STELLA_RW5 safe chapter skip',this.session.chapter,this.session.cursor);},
+  dialogueScrolled(event){console.log('STELLA_BAND8PRO dialogue scroll',this.session.chapter,this.session.cursor,event.scrollY);},
+  renderMap(frame){this.loading=true;const seq=++this.loadSequence;file.readText({complete:()=>{},uri:'/common/map-preview.txt',success:data=>{if(seq!==this.loadSequence)return;try{const choices=previewMap(JSON.parse(data.text),this.session,frame);if(!choices.length)throw new Error('此地图阶段暂无支持的剧情选项，请返回标题选择其他篇章');this.options=this.visibleOptions(choices);this.mode='choice';this.loading=false;console.log('STELLA_BAND8PRO map ready',this.session.chapter,this.session.cursor,choices.map(x=>x.value).join(','));}catch(e){this.fail(e.message);}},fail:()=>{if(seq===this.loadSequence)this.fail('地图选项读取失败');}});},
+  goNextChapter(){if(this.loading||this.mode!=='menu')return;if(this.resumeMode==='choice'){this.mode='choice';this.toast('请先作出当前选择');return;}this.clearTyping();this._chapterSkip=nextChapter(this.session);if(!this._chapterSkip){this.toast('本篇已结束');return;}this._autoHops=0;this.loading=true;this.renderFrame();console.log('STELLA_BAND8PRO safe chapter skip',this.session.chapter,this.session.cursor);},
   pick(index){if(this.mode!=='choice'||this.loading)return;choose(this.session,this.options[index],index);this.renderFrame();},
   goBack(){if(this.loading||this.mode!=='play')return;this.clearTyping();if(previous(this.session)){if(this.session.progression==='story')withProgress(this.session,this._progress);this.renderFrame();}else this.toast('已经是第一句');},
-  showMenu(){if(this.loading||(this.mode!=='play'&&this.mode!=='choice'))return;this.clearTyping();this.displayText=this.fullText;this.resumeMode=this.mode;this.mode='menu';console.log('STELLA_RW5 menu',this.session.chapter);},
+  showMenu(){if(this.loading||(this.mode!=='play'&&this.mode!=='choice'))return;this.clearTyping();this.displayText=this.fullText;this.resumeMode=this.mode;this.mode='menu';console.log('STELLA_BAND8PRO menu',this.session.chapter);},
   resume(){this.mode=this.resumeMode;},
   swipe(event){
     if(this.mode==='gallery'){if(event.direction==='left')this.nextGalleryPage();if(event.direction==='right')this.previousGalleryPage();return;}
@@ -202,7 +202,7 @@ export default {
     this._pendingSave=role==='save'?createSave(this.session,this.resumeMode,Date.now()):null;
     this.slotTitle=role==='save'?'选择保存栏位':'选择读取栏位';this.slotPage=0;this.slotRows=[];this.mode='slots';this.loading=true;
     const seq=++this._slotsSequence;this._slotData=Array(SLOT_COUNT).fill(null);
-    const ready=()=>{if(seq!==this._slotsSequence)return;this.loading=false;this.refreshSlotRows();console.log('STELLA_RW5 slots ready',role);};
+    const ready=()=>{if(seq!==this._slotsSequence)return;this.loading=false;this.refreshSlotRows();console.log('STELLA_BAND8PRO slots ready',role);};
     const finish=index=>{
       if(seq!==this._slotsSequence)return;
       if(index+1<SLOT_COUNT){setTimeout(()=>readSlot(index+1),0);return;}
@@ -221,10 +221,10 @@ export default {
     const saved=this._slotData[index];
     if(this._slotRole==='load'){
       if(!saved){this.toast('这个栏位还没有存档');return;}if(saved.invalid){this.toast('这个存档无法读取');return;}
-      try{this.session=restore(saved.state);if(this.session.progression==='story')withProgress(this.session,this._progress);this.cachedChapter=0;this._slotsSequence++;this.renderFrame();console.log('STELLA_RW5 slot loaded',index+1,this.session.chapter,this.session.cursor);}catch(e){this.toast(e.message);}return;
+      try{this.session=restore(saved.state);if(this.session.progression==='story')withProgress(this.session,this._progress);this.cachedChapter=0;this._slotsSequence++;this.renderFrame();console.log('STELLA_BAND8PRO slot loaded',index+1,this.session.chapter,this.session.cursor);}catch(e){this.toast(e.message);}return;
     }
     this._pendingSlotIndex=index;
-    if(saved){const row=slotRow(index,saved);this.overwriteTitle='覆盖'+row.title+'？';this.overwriteDetail=row.meta+'\n覆盖后将保存当前进度。';this.overwriteFont=textFont(this.overwriteDetail);this.mode='overwrite';console.log('STELLA_RW5 overwrite',index+1);return;}
+    if(saved){const row=slotRow(index,saved);this.overwriteTitle='覆盖'+row.title+'？';this.overwriteDetail=row.meta+'\n覆盖后将保存当前进度。';this.overwriteFont=textFont(this.overwriteDetail);this.mode='overwrite';console.log('STELLA_BAND8PRO overwrite',index+1);return;}
     this.commitSlot();
   },
   confirmOverwrite(){if(this.mode==='overwrite')this.commitSlot();},
@@ -234,7 +234,7 @@ export default {
     const index=this._pendingSlotIndex,seq=this._slotsSequence,payload=this._pendingSave;payload.savedAt=Date.now();this.storageBusy=true;this.loading=true;
     storage.set({complete:()=>{},key:slotKey(index),value:JSON.stringify(payload),success:()=>{
       if(seq!==this._slotsSequence)return;this._slotData[index]=payload;this.storageBusy=false;this.loading=false;this._slotsSequence++;this.mode=this.resumeMode;
-      this.toast('已保存到存档 '+('0'+(index+1)).slice(-2));console.log('STELLA_RW5 slot saved',index+1,payload.state.chapter,payload.state.cursor);
+      this.toast('已保存到存档 '+('0'+(index+1)).slice(-2));console.log('STELLA_BAND8PRO slot saved',index+1,payload.state.chapter,payload.state.cursor);
     },fail:()=>{if(seq!==this._slotsSequence)return;this.storageBusy=false;this.loading=false;this.toast('保存失败，请重试');}});
   },
   openGallery(){
@@ -243,83 +243,84 @@ export default {
     this.loading=true;const seq=++this._gallerySequence;
     file.readText({complete:()=>{},uri:'/common/gallery.txt',success:data=>{
       if(seq!==this._gallerySequence)return;
-      try{const items=JSON.parse(data.text);if(!Array.isArray(items)||!items.length)throw new Error('CG 目录为空');this._galleryCatalog=groupGallery(items);this._galleryTotal=items.length;this.galleryPage=0;this.loading=false;this.refreshGallery();console.log('STELLA_RW5 gallery ready',this._galleryCatalog.length,items.length);}catch(e){this.fail(e.message);}
+      try{const items=JSON.parse(data.text);if(!Array.isArray(items)||!items.length)throw new Error('CG 目录为空');this._galleryCatalog=groupGallery(items);this._galleryTotal=items.length;this.galleryPage=0;this.loading=false;this.refreshGallery();console.log('STELLA_BAND8PRO gallery ready',this._galleryCatalog.length,items.length);}catch(e){this.fail(e.message);}
     },fail:(data,code)=>{if(seq===this._gallerySequence)this.fail('CG 目录读取失败：'+code);}});
   },
   refreshGallery(){const start=this.galleryPage*4;const items=this._galleryCatalog.slice(start,start+4).map((item,i)=>({image:item.image,label:item.label+'\n'+item.variants.length+' 张',index:start+i,font:textFont(item.label+'张'),src:imagePath(item.image)}));this.galleryTop=items.slice(0,2);this.galleryBottom=items.slice(2,4);this.galleryPageLabel=this._galleryCatalog.length+' 组 · '+this._galleryTotal+' 张 · 第 '+(this.galleryPage+1)+' / '+Math.ceil(this._galleryCatalog.length/4)+' 页';},
   previousGalleryPage(){if(this.loading||this.galleryPage===0)return;this.galleryPage--;this.refreshGallery();},
   nextGalleryPage(){if(this.loading||this.galleryPage>=Math.ceil(this._galleryCatalog.length/4)-1)return;this.galleryPage++;this.refreshGallery();},
   viewCg(index){if(this.loading||index<0||index>=this._galleryCatalog.length)return;this.cgIndex=index;this.cgVariant=0;this.mode='cg';this.renderCg();},
-  renderCg(){const group=this._galleryCatalog[this.cgIndex],item=group.variants[this.cgVariant];this.cgSrc=imagePath(item.image);this.cgLabel=group.label+(group.variants.length>1?' · 差分 '+(this.cgVariant+1)+' / '+group.variants.length+' · 点击切换':'');this.cgFont=textFont(this.cgLabel);console.log('STELLA_RW5 cg',this.cgIndex+1,this.cgVariant+1,item.image);},
+  renderCg(){const group=this._galleryCatalog[this.cgIndex],item=group.variants[this.cgVariant];this.cgSrc=imagePath(item.image);this.cgLabel=group.label+(group.variants.length>1?' · 差分 '+(this.cgVariant+1)+' / '+group.variants.length+' · 点击切换':'');this.cgFont=textFont(this.cgLabel);console.log('STELLA_BAND8PRO cg',this.cgIndex+1,this.cgVariant+1,item.image);},
   cycleCg(){if(this.mode!=='cg'||this.loading)return;const count=this._galleryCatalog[this.cgIndex].variants.length;if(count<2)return;this.cgVariant=stepVariant(this.cgVariant,1,count);this.renderCg();},
   previousCg(){if(this.cgIndex>0)this.viewCg(this.cgIndex-1);},
   nextCg(){if(this.cgIndex<this._galleryCatalog.length-1)this.viewCg(this.cgIndex+1);},
   backToGallery(){this.galleryPage=Math.floor(this.cgIndex/4);this.refreshGallery();this.mode='gallery';},
-  refreshSettings(){this.speedLabel=this.textSpeed===0?'显示速度：即时':'显示速度：逐字';this.fontLabel=this.fontSize===28?'字号：大':'字号：标准';},
-  persistSettings(){storage.set({complete:()=>{},key:'stella_rw5_settings_v1',value:JSON.stringify({fontSize:this.fontSize,textSpeed:this.textSpeed}),success:()=>{},fail:()=>{}});},
+  refreshSettings(){this.speedLabel=this.textSpeed===0?'显示速度：即时':'显示速度：逐字';this.fontLabel=this.fontSize===26?'字号：大':'字号：标准';},
+  persistSettings(){storage.set({complete:()=>{},key:'stella_band8pro_settings_v1',value:JSON.stringify({fontSize:this.fontSize,textSpeed:this.textSpeed}),success:()=>{},fail:()=>{}});},
   toggleSpeed(){this.textSpeed=this.textSpeed===0?30:0;this.refreshSettings();this.persistSettings();},
-  toggleFont(){this.fontSize=this.fontSize===24?28:24;this.refreshSettings();this.persistSettings();},
+  toggleFont(){this.fontSize=this.fontSize===22?26:22;this.refreshSettings();this.persistSettings();},
   toTitle(){if(this.storageBusy)return;this._chapterSkip=null;this.syncProgress();this.writeProgress();this.clearTyping();this.loadSequence++;this._slotsSequence++;this._gallerySequence++;this.loading=false;this.mode='title';this.backgroundSrc='/common/title_bg.png';this.bodySrc='';this.bodySecond='';this.bodyThird='';if(!this._progressReady)this.readProgress();},
   toast(message){prompt.showToast({message,duration:1500,success:()=>{},fail:()=>{},complete:()=>{}});},
-  fail(message){this._chapterSkip=null;this.clearTyping();this.loading=false;this.mode='error';this.errorText=message;console.error('STELLA_RW5 error',message);}
+  fail(message){this._chapterSkip=null;this.clearTyping();this.loading=false;this.mode='error';this.errorText=message;console.error('STELLA_BAND8PRO error',message);}
 }
 </script>
 <style>
 @font-face {font-family:stellaextra;src:url('/common/stella-extra.otf');}
-.page{width:432px;height:514px;background-color:#f4f8f5;flex-direction:column;}
-.system-backdrop{width:432px;height:514px;}
-.title-screen{position:absolute;top:0px;left:0px;width:432px;height:514px;}
-.title-art{position:absolute;top:0px;left:0px;width:432px;height:514px;object-fit:cover;}
-.title-logo{position:absolute;top:26px;left:30px;width:352px;height:135px;object-fit:contain;}
-.title-menu{position:absolute;top:214px;left:24px;width:250px;height:266px;flex-direction:column;}
-.title-row{height:36px;width:246px;padding:0px 12px;justify-content:flex-start;align-items:center;}
-.title-label{height:28px;width:222px;object-fit:contain;}
-.title-footer{position:absolute;top:485px;left:38px;height:16px;width:330px;font-size:10px;color:#17483c;text-align:left;}
-.art{position:absolute;top:0px;left:0px;width:432px;height:286px;justify-content:center;align-items:center;background-color:#285d50;}
-.art-fill{position:absolute;top:0px;left:0px;width:432px;height:286px;}
-.background{width:432px;height:286px;object-fit:contain;}
-.body{position:absolute;top:0px;left:116px;width:200px;height:286px;object-fit:contain;}
-.dialogue-panel{position:absolute;top:286px;left:0px;width:432px;height:228px;flex-direction:column;padding:12px 18px;background-color:#376b5e;}
-.dialogue-edge{position:absolute;top:0px;left:18px;width:396px;height:1px;background-color:#96b5a9;}
-.speaker-row{height:30px;justify-content:space-between;align-items:center;}
-.speaker{font-size:23px;color:#ffffff;}
-.chapter{font-size:16px;color:#e0f0e9;}
-.dialogue-scroll{width:396px;height:128px;flex-direction:column;}
-.dialogue{width:396px;flex-shrink:0;lines:-1;color:#ffffff;line-height:34px;text-align:left;}
-.toolbar{height:42px;width:396px;justify-content:space-between;align-items:center;}
-.tool{font-size:20px;color:#ffffff;padding:8px;}
-.game-title{font-size:28px;color:#174d40;text-align:left;margin-bottom:12px;}
-.subtitle{font-size:20px;color:#527769;text-align:left;margin-bottom:24px;}
-.action{height:52px;width:356px;margin-bottom:8px;color:#ffffff;background-color:#21594d;text-align:center;font-size:24px;}
-.choice-panel{position:absolute;top:0px;left:0px;width:432px;height:514px;background-color:#123f36;flex-direction:column;padding:24px 18px;}
-.choice-title{height:44px;font-size:25px;color:#ffffff;margin-bottom:14px;text-align:left;}
-.choice-list{width:396px;height:370px;flex-direction:column;}
-.choice{height:108px;width:396px;padding:16px;background-color:#2c6657;font-size:24px;line-height:32px;color:#ffffff;text-align:left;margin-bottom:10px;}
-.small-action{height:38px;font-size:20px;color:#ffffff;text-align:center;}
-.overlay{position:absolute;top:0px;left:0px;width:432px;height:514px;flex-direction:column;padding:22px 32px;}
-.menu-title{height:40px;font-size:28px;color:#174d40;text-align:left;margin-bottom:12px;}
-.menu-action{height:50px;font-size:22px;color:#ffffff;background-color:#21594d;margin-bottom:8px;text-align:center;}
+.page{width:336px;height:480px;background-color:#f4f8f5;flex-direction:column;}
+.system-backdrop{width:336px;height:480px;}
+.title-screen{position:absolute;top:0px;left:0px;width:336px;height:480px;}
+.title-art{position:absolute;top:0px;left:0px;width:336px;height:480px;object-fit:cover;}
+.title-logo{position:absolute;top:24px;left:20px;width:292px;height:112px;object-fit:contain;}
+.title-menu{position:absolute;top:204px;left:18px;width:230px;height:238px;flex-direction:column;}
+.title-row{height:34px;width:230px;padding:0px 10px;justify-content:flex-start;align-items:center;}
+.title-label{height:28px;width:210px;object-fit:contain;}
+.title-footer{position:absolute;top:458px;left:28px;height:14px;width:290px;font-size:9px;color:#17483c;text-align:left;}
+.art{position:absolute;top:0px;left:0px;width:336px;height:240px;justify-content:center;align-items:center;background-color:#285d50;}
+.art-fill{position:absolute;top:0px;left:0px;width:336px;height:240px;}
+.background{width:336px;height:240px;object-fit:contain;}
+.body{position:absolute;top:0px;left:90px;width:156px;height:267px;object-fit:contain;}
+.dialogue-panel{position:absolute;top:240px;left:0px;width:336px;height:240px;flex-direction:column;padding:12px 16px;background-color:#376b5e;}
+.dialogue-edge{position:absolute;top:0px;left:16px;width:304px;height:1px;background-color:#96b5a9;}
+.speaker-row{height:38px;width:304px;flex-direction:column;}
+.speaker{height:23px;width:304px;font-size:21px;color:#ffffff;}
+.chapter{height:15px;width:304px;font-size:13px;color:#e0f0e9;}
+.dialogue-scroll{width:304px;height:136px;flex-direction:column;}
+.dialogue{width:304px;flex-shrink:0;lines:-1;color:#ffffff;line-height:32px;text-align:left;}
+.toolbar{height:42px;width:304px;justify-content:space-between;align-items:center;}
+.tool{font-size:18px;color:#ffffff;padding:6px;}
+.game-title{font-size:25px;color:#174d40;text-align:left;margin-bottom:12px;}
+.subtitle{font-size:18px;color:#527769;text-align:left;margin-bottom:24px;}
+.action{height:49px;width:277px;margin-bottom:8px;color:#ffffff;background-color:#21594d;text-align:center;font-size:22px;}
+.choice-panel{position:absolute;top:0px;left:0px;width:336px;height:480px;background-color:#123f36;flex-direction:column;padding:18px 16px;}
+.choice-title{height:41px;font-size:23px;color:#ffffff;margin-bottom:14px;text-align:left;}
+.choice-list{width:304px;height:346px;flex-direction:column;}
+.choice{height:101px;width:304px;padding:16px;background-color:#2c6657;font-size:22px;line-height:32px;color:#ffffff;text-align:left;margin-bottom:10px;}
+.small-action{height:35px;font-size:18px;color:#ffffff;text-align:center;}
+.overlay{position:absolute;top:0px;left:0px;width:336px;height:480px;flex-direction:column;padding:20px 24px;}
+.menu-title{height:37px;font-size:25px;color:#174d40;text-align:left;margin-bottom:12px;}
+.menu-action{height:47px;font-size:20px;color:#ffffff;background-color:#21594d;margin-bottom:8px;text-align:center;}
 .muted{color:#325e4e;background-color:#dae8df;}
-.full-panel{position:absolute;top:0px;left:0px;width:432px;height:514px;flex-direction:column;padding:16px 18px;}
-.panel-title{height:36px;font-size:28px;color:#174d40;text-align:left;margin-bottom:4px;}
-.panel-subtitle{height:22px;font-size:16px;color:#527769;text-align:left;margin-bottom:6px;}
-.slot-list{height:368px;width:396px;flex-direction:column;}
-.slot-card{height:84px;width:396px;margin-bottom:8px;padding:7px 12px;flex-direction:column;background-color:#e6efe9;}
-.slot-title{height:26px;font-size:22px;color:#173f35;}
-.slot-meta{height:19px;font-size:16px;color:#527769;}
-.slot-preview{height:22px;font-size:18px;color:#345f4f;}
-.pager{height:44px;width:396px;justify-content:space-between;align-items:center;}
-.pager-action{font-size:20px;color:#24594c;padding:8px;}
-.gallery-row{height:184px;width:396px;justify-content:space-between;}
-.gallery-card{height:176px;width:192px;padding:6px;flex-direction:column;background-color:#e5eee8;}
-.gallery-thumb{height:116px;width:180px;object-fit:contain;background-color:#f5f8f5;}
-.gallery-caption{height:48px;width:180px;font-size:18px;line-height:22px;color:#234f40;text-align:center;}
-.cg-panel{position:absolute;top:0px;left:0px;width:432px;height:514px;flex-direction:column;background-color:#f1f6f1;}
-.cg-image{width:432px;height:432px;object-fit:contain;}
-.cg-caption{width:432px;height:28px;font-size:18px;color:#234f40;text-align:center;}
-.cg-controls{width:432px;height:54px;padding:0px 10px;justify-content:space-between;align-items:center;background-color:#e5eee8;}
-.end-panel{position:absolute;top:0px;left:0px;width:432px;height:514px;flex-direction:column;padding:160px 38px 24px;}
-.confirm-text{font-size:24px;color:#234f40;margin:30px 0px;}
-.error-text{font-size:22px;color:#945746;margin-bottom:30px;}
-.loading{position:absolute;top:234px;left:128px;width:176px;height:46px;text-align:center;font-size:23px;color:#ffffff;background-color:#21594d;}
+.full-panel{position:absolute;top:0px;left:0px;width:336px;height:480px;flex-direction:column;padding:14px 16px;}
+.panel-title{height:34px;font-size:25px;color:#174d40;text-align:left;margin-bottom:4px;}
+.panel-subtitle{height:21px;font-size:15px;color:#527769;text-align:left;margin-bottom:6px;}
+.slot-list{height:344px;width:304px;flex-direction:column;}
+.slot-card{height:78px;width:304px;margin-bottom:8px;padding:6px 10px;flex-direction:column;background-color:#e6efe9;}
+.browse-name{height:44px;width:284px;font-size:18px;line-height:22px;lines:2;color:#173f35;}
+.slot-title{height:24px;font-size:20px;color:#173f35;}
+.slot-meta{height:18px;font-size:15px;color:#527769;}
+.slot-preview{height:21px;font-size:16px;color:#345f4f;}
+.pager{height:42px;width:304px;justify-content:space-between;align-items:center;}
+.pager-action{font-size:17px;color:#24594c;padding:6px;}
+.gallery-row{height:172px;width:304px;justify-content:space-between;}
+.gallery-card{height:164px;width:146px;padding:6px;flex-direction:column;background-color:#e5eee8;}
+.gallery-thumb{height:104px;width:134px;object-fit:contain;background-color:#f5f8f5;}
+.gallery-caption{height:48px;width:134px;font-size:16px;line-height:21px;color:#234f40;text-align:center;}
+.cg-panel{position:absolute;top:0px;left:0px;width:336px;height:480px;flex-direction:column;background-color:#f1f6f1;}
+.cg-image{width:336px;height:398px;object-fit:contain;}
+.cg-caption{width:336px;height:28px;font-size:16px;color:#234f40;text-align:center;}
+.cg-controls{width:336px;height:54px;padding:0px 6px;justify-content:space-between;align-items:center;background-color:#e5eee8;}
+.end-panel{position:absolute;top:0px;left:0px;width:336px;height:480px;flex-direction:column;padding:160px 38px 24px;}
+.confirm-text{font-size:22px;color:#234f40;margin:30px 0px;}
+.error-text{font-size:20px;color:#945746;margin-bottom:30px;}
+.loading{position:absolute;top:219px;left:100px;width:137px;height:43px;text-align:center;font-size:21px;color:#ffffff;background-color:#21594d;}
 </style>

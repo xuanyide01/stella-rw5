@@ -6,16 +6,16 @@ const {getRunningAvdConfigByName}=require('@aiot-toolkit/emulator/lib/emulatorut
 const {createGrpcClient}=require('@aiot-toolkit/emulator/lib/vvd/grpc');
 const environment=process.env.STARRY_EMULATOR_HOME || path.resolve(__dirname,'../.emulator');
 const manager=new VvdManager({sdkHome:process.env.WATCH_SDK_HOME||path.join(environment,'sdk'),vvdHome:path.join(environment,'vvd')});
-const name=process.env.WATCH_VVD_NAME||'StellaRW5-432x514';
+const name=process.env.WATCH_VVD_NAME||'StellaBand8Pro-336x480';
 process.env.ANDROID_AVD_HOME=manager.vvdHome;
 process.env.ANDROID_EMULATOR_HOME=environment;
 process.env.ANDROID_SDK_ROOT=manager.sdkHome;
 process.env.CI='1';
 let agent,child,server,bootReady=false,bootLog='';
-fs.writeFileSync(path.join(environment,'controller-pid.json'),JSON.stringify({pid:process.pid,script:__filename}));
+fs.writeFileSync(path.join(environment,'controller-pid.json'),JSON.stringify({pid:process.pid,script:__filename,logOffset:fs.existsSync(path.join(environment,'emulator.log'))?fs.statSync(path.join(environment,'emulator.log')).size:0}));
 const log=fs.createWriteStream(path.join(environment,'emulator.log'),{flags:'a'});
-const packageName=process.env.STARRY_EMULATOR_PACKAGE||'com.codex.stella.rw5';
-const serialPort=Number(process.env.WATCH_SERIAL_PORT||5556),grpcPort=Number(process.env.WATCH_GRPC_PORT||8556),debugPort=Number(process.env.WATCH_DEBUG_PORT||10056),controlPort=Number(process.env.WATCH_CONTROL_PORT||43129);
+const packageName=process.env.STARRY_EMULATOR_PACKAGE||'com.codex.stella.band8pro';
+const serialPort=Number(process.env.WATCH_SERIAL_PORT||5572),grpcPort=Number(process.env.WATCH_GRPC_PORT||8572),debugPort=Number(process.env.WATCH_DEBUG_PORT||10072),controlPort=Number(process.env.WATCH_CONTROL_PORT||43136);
 const adb=process.env.WATCH_ADB_PATH||path.resolve(path.dirname(require.resolve('@miwt/adb')),'../bin/win/adb.exe');
 async function adbCmd(...args){const r=await exec(adb,['-s','emulator-'+serialPort,...args],{windowsHide:true,timeout:240000,maxBuffer:1024*1024*8});return r.stdout;}
 async function connect(){if(agent)return agent;const conf=getRunningAvdConfigByName(name);if(!conf)throw new Error('Emulator is not registered yet');agent=createGrpcClient(conf);await agent.waitForReady();return agent;}
@@ -26,7 +26,7 @@ function screenshot(a){return new Promise((resolve,reject)=>a.client.getScreensh
  if(!response||!response.image||!response.image.length)return reject(Error('Simulator screen is not ready'));
  resolve(response.image);
 }));}
-async function install(rpk){const target='/data/stella-rw5.rpk';await adbCmd('wait-for-device');await adbCmd('push',rpk,target);try{const result=await adbCmd('shell','pm','install',target);if(!/success 0/.test(result))throw Error(result.trim()||'Installation did not report success');return result;}finally{await adbCmd('shell','rm',target).catch(()=>{});}}
+async function install(rpk){const target='/data/stella-'+Date.now()+'.rpk';await adbCmd('wait-for-device');await adbCmd('push',rpk,target);const result=await adbCmd('shell','pm','install',target);if(!/success 0/.test(result))throw Error(result.trim()||'Installation did not report success');await adbCmd('shell','rm',target).catch(()=>{});return result;}
 async function startApp(){await adbCmd('wait-for-device');for(let n=0;n<80;n++){const info=await adbCmd('shell','pm','get',packageName).catch(()=> '');if(/bAllValid: true/.test(info)){const result=await adbCmd('shell','am','start',packageName);if(!/execution error|failed/i.test(result))return result;}await new Promise(r=>setTimeout(r,500));}throw Error('Emulator services are not ready or the application is not installed');}
 (async()=>{
   const cmd=await manager.getVvdStartCmd({vvdName:name,qtHideWindow:true,serialPort,grpcPort,debugPort});

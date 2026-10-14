@@ -1,15 +1,28 @@
 {
   "theme": "original sky and normal-title character on right; white / forest green system panels",
-  "titleBackground": "Original sky and char01 heroine crop; enlarged on right, below logo and touching bottom",
+  "titleBackground": "Original sky and complete char01 heroine silhouette; original aspect ratio, right-side face, touching bottom",
+  "titleHeroineSourceBounds": [
+    394,
+    5,
+    1872,
+    1072
+  ],
+  "titleHeroineSourceSize": [
+    1478,
+    1067
+  ],
+  "titleHeroineSelection": "Entire alpha-connected original heroine, no rectangular cut through clothing",
+  "titleHeroineFullyInsideScreen": true,
+  "titleHeroineUniformScale": true,
   "titleHeroinePosition": [
-    160,
-    144
+    6,
+    246
   ],
   "titleHeroineSize": [
-    337,
-    370
+    324,
+    234
   ],
-  "titleHeroineBottom": 514,
+  "titleHeroineBottom": 480,
   "titleMenuBackground": "transparent; no white panel or panel decoration",
   "dialogueText": "#ffffff",
   "dialogueBackground": "#376b5e solid",
@@ -54,8 +67,8 @@
   },
   "titleButtonOrigins": "Six original raster button rows; AFTER STORY assembled from their glyphs plus Y from the original YES dialog.",
   "screen": [
-    432,
-    514
+    336,
+    480
   ],
-  "uiAssetBytes": 75469
+  "uiAssetBytes": 58098
 }

@@ -10,7 +10,7 @@ New-Item -ItemType Directory -Path $EnvironmentHome -Force | Out-Null
 if ($NodeModulesPath) { $env:NODE_PATH = $NodeModulesPath }
 $env:STARRY_EMULATOR_HOME = $EnvironmentHome
 $env:WATCH_SDK_HOME = $SdkHome
-$env:WATCH_VVD_NAME = 'StellaRW5-432x514'
+$env:WATCH_VVD_NAME = 'StellaBand8Pro-336x480'
 $node = (Get-Command node).Source
 $process = Start-Process -FilePath $node -ArgumentList 'tools/emulator-server.cjs' -WorkingDirectory $project -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $EnvironmentHome 'controller-stdout.log') -RedirectStandardError (Join-Path $EnvironmentHome 'controller-stderr.log')
 $process.Id
