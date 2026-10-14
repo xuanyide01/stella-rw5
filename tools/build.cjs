@@ -18,6 +18,6 @@ const {compile}=require(path.join(toolkit,'lib/commands/compile'));
  // Use the release wrapping that resolved the earlier Summer Pockets install issue.
  const packaging=await require('./repack-rpk.cjs').repackRpk(file,file,toolkit);
  console.log('R1_PACKAGING',JSON.stringify(packaging));
- const bytes=fs.statSync(file).size;if(bytes>15000000)throw Error('Package exceeds the 15,000,000-byte cap: '+bytes);
+ const bytes=fs.statSync(file).size;if(bytes>10000000)throw Error('Light package exceeds the 10,000,000-byte cap: '+bytes);
  console.log('BUILD_OUTPUT',name,bytes);
 })().catch(e=>{console.error(e);process.exitCode=1;});

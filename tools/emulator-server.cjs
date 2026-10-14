@@ -12,7 +12,7 @@ process.env.ANDROID_EMULATOR_HOME=environment;
 process.env.ANDROID_SDK_ROOT=manager.sdkHome;
 process.env.CI='1';
 let agent,child,server,bootReady=false,bootLog='';
-fs.writeFileSync(path.join(environment,'controller-pid.json'),JSON.stringify({pid:process.pid,script:__filename}));
+fs.writeFileSync(path.join(environment,'controller-pid.json'),JSON.stringify({pid:process.pid,script:__filename,logOffset:fs.existsSync(path.join(environment,'emulator.log'))?fs.statSync(path.join(environment,'emulator.log')).size:0}));
 const log=fs.createWriteStream(path.join(environment,'emulator.log'),{flags:'a'});
 const packageName=process.env.STARRY_EMULATOR_PACKAGE||'com.codex.stella.rw5';
 const serialPort=Number(process.env.WATCH_SERIAL_PORT||5556),grpcPort=Number(process.env.WATCH_GRPC_PORT||8556),debugPort=Number(process.env.WATCH_DEBUG_PORT||10056),controlPort=Number(process.env.WATCH_CONTROL_PORT||43129);
@@ -26,7 +26,7 @@ function screenshot(a){return new Promise((resolve,reject)=>a.client.getScreensh
  if(!response||!response.image||!response.image.length)return reject(Error('Simulator screen is not ready'));
  resolve(response.image);
 }));}
-async function install(rpk){const target='/data/stella-rw5.rpk';await adbCmd('wait-for-device');await adbCmd('push',rpk,target);try{const result=await adbCmd('shell','pm','install',target);if(!/success 0/.test(result))throw Error(result.trim()||'Installation did not report success');return result;}finally{await adbCmd('shell','rm',target).catch(()=>{});}}
+async function install(rpk){const target='/data/stella-'+Date.now()+'.rpk';await adbCmd('wait-for-device');await adbCmd('push',rpk,target);const result=await adbCmd('shell','pm','install',target);if(!/success 0/.test(result))throw Error(result.trim()||'Installation did not report success');await adbCmd('shell','rm',target).catch(()=>{});return result;}
 async function startApp(){await adbCmd('wait-for-device');for(let n=0;n<80;n++){const info=await adbCmd('shell','pm','get',packageName).catch(()=> '');if(/bAllValid: true/.test(info)){const result=await adbCmd('shell','am','start',packageName);if(!/execution error|failed/i.test(result))return result;}await new Promise(r=>setTimeout(r,500));}throw Error('Emulator services are not ready or the application is not installed');}
 (async()=>{
   const cmd=await manager.getVvdStartCmd({vvdName:name,qtHideWindow:true,serialPort,grpcPort,debugPort});

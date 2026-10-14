@@ -1,3 +1,4 @@
 Pillow==12.2.0
 fonttools==4.63.0
 cryptography==42.0.2
+numpy>=1.24

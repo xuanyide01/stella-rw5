@@ -1,7 +1,0 @@
-{
-  "result": "not_complete",
-  "packageSha256": "e3e48fd2f5ffe6885bd3fdd2ea59fb393c9c2c73384c012b6fb4b7389a2d2035",
-  "readAndScrollAndChoiceChecksPassed": true,
-  "failedPhase": "reopen input was sent before new runtime onShow, virtual Power toggled too early",
-  "finalTestCorrection": "wait for new title background and onShow, then wake only if black"
-}
