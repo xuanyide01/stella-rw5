@@ -1,0 +1,36 @@
+{
+  "result": "passed",
+  "version": "0.2.4",
+  "baselineVersion": "0.2.3",
+  "changedExistingSourceFiles": [
+    "src/manifest.json",
+    "src/pages/index/index.ux"
+  ],
+  "addedSourceFiles": [
+    "src/common/auto-reader.js"
+  ],
+  "allStoryImagesFontsAndOldSaveModulesUnchanged": true,
+  "typewriterMillisecondsPerGlyph": 30,
+  "postTextWaitMilliseconds": [
+    2600,
+    1500,
+    800
+  ],
+  "defaultSpeed": "标准",
+  "defaultAutoEnabled": false,
+  "onlySpeedPersisted": true,
+  "extraWaitAfter60Glyphs": {
+    "perGlyphMilliseconds": 55,
+    "maximumMilliseconds": 5000
+  },
+  "automatedTests": {
+    "passed": 28,
+    "failed": 0
+  },
+  "nativeExactPackageChecked": true,
+  "nativeMenuActionsFullyVisible": 9,
+  "nativeRestartOffAndFastSpeedPreserved": true,
+  "newUILabelsCoveredByNativeDefaultFont": true,
+  "physicalDeviceTested": false,
+  "packageSha256": "edb972427de08d7e4464c602df6452b60775e5d81fc378725beeaf7f24d41626"
+}

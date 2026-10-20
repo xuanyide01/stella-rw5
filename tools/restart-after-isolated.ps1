@@ -22,5 +22,5 @@ $env:WATCH_SERIAL_PORT = '5570'
 $env:WATCH_GRPC_PORT = '8570'
 $env:WATCH_DEBUG_PORT = '10070'
 $env:WATCH_CONTROL_PORT = '43135'
-$newController = Start-Process -FilePath 'C:\Program Files\nodejs\node.exe' -ArgumentList 'tools/emulator-server.cjs' -WorkingDirectory $projectRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $environmentRoot 'controller-stdout.log') -RedirectStandardError (Join-Path $environmentRoot 'controller-stderr.log')
+$newController = Start-Process -FilePath (Get-Command node -ErrorAction Stop).Source -ArgumentList 'tools/emulator-server.cjs' -WorkingDirectory $projectRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $environmentRoot 'controller-stdout.log') -RedirectStandardError (Join-Path $environmentRoot 'controller-stderr.log')
 Write-Output $newController.Id

@@ -25,7 +25,7 @@
     <div if="{{mode === 'play'}}" class="dialogue-panel">
       <div class="dialogue-edge"></div>
       <div class="speaker-row"><text class="speaker" style="font-family: {{speakerFont}};">{{speaker}}</text><text class="chapter" style="font-family: {{chapterFont}};">{{chapterLabel}}</text></div>
-      <scroll id="dialogue-scroll" class="dialogue-scroll" scroll-y="true" ontouchstart="dialogueTouchStart" ontouchmove="dialogueTouchMove" onscroll="dialogueScrolled" onclick="dialogueTap"><text class="dialogue" style="font-size: {{fontSize}}px;font-family: {{dialogueFont}};">{{displayText}}</text></scroll>
+      <scroll id="dialogue-scroll" class="dialogue-scroll" scroll-y="true" ontouchstart="dialogueTouchStart" ontouchmove="dialogueTouchMove" ontouchend="dialogueTouchEnd" onscroll="dialogueScrolled" onclick="dialogueTap"><text class="dialogue" style="font-size: {{fontSize}}px;font-family: {{dialogueFont}};">{{displayText}}</text></scroll>
       <div class="toolbar"><text class="tool" onclick="goBack">上一句</text><text class="tool" onclick="showMenu">菜单</text><text class="tool" onclick="advance">下一句 ›</text></div>
     </div>
     <div if="{{mode === 'choice'}}" class="choice-panel">
@@ -33,15 +33,17 @@
       <scroll class="choice-list" scroll-y="true"><text for="{{options}}" tid="text" class="choice" style="font-family: {{$item.font}};" onclick="pick($idx)">{{$item.text}}</text></scroll>
       <text class="small-action" onclick="showMenu">菜单</text>
     </div>
-    <div if="{{mode === 'menu'}}" class="overlay">
-      <text class="menu-title">阅读菜单</text>
-      <text class="menu-action" onclick="saveGame">保存进度</text>
-      <text class="menu-action" onclick="loadGame">读取进度</text>
-      <text class="menu-action" style="color: {{hasNextChapter ? '#ffffff' : '#a8bab3'}};" onclick="goNextChapter">下一章 ›</text>
-      <text class="menu-action" onclick="toggleSpeed">{{speedLabel}}</text>
-      <text class="menu-action" onclick="toggleFont">{{fontLabel}}</text>
-      <text class="menu-action" onclick="resume">返回游戏</text>
-      <text class="menu-action muted" onclick="toTitle">返回标题</text>
+    <div if="{{mode === 'menu'}}" class="overlay reading-menu">
+      <text class="menu-title reading-header">阅读菜单</text>
+      <text class="menu-action reading-action" onclick="saveGame">保存进度</text>
+      <text class="menu-action reading-action" onclick="loadGame">读取进度</text>
+      <text class="menu-action reading-action" style="color: {{hasNextChapter ? '#ffffff' : '#a8bab3'}};" onclick="goNextChapter">下一章 ›</text>
+      <text class="menu-action reading-action" onclick="toggleAuto">{{autoLabel}}</text>
+      <text class="menu-action reading-action" onclick="cycleAutoSpeed">{{autoSpeedLabel}}</text>
+      <text class="menu-action reading-action" onclick="toggleSpeed">{{speedLabel}}</text>
+      <text class="menu-action reading-action" onclick="toggleFont">{{fontLabel}}</text>
+      <text class="menu-action reading-action" onclick="resume">返回游戏</text>
+      <text class="menu-action reading-action muted" onclick="toTitle">返回标题</text>
     </div>
     <div if="{{mode === 'settings'}}" class="overlay">
       <text class="menu-title">CONFIG</text>
@@ -97,30 +99,40 @@ import {groupGallery,stepVariant} from '../../common/gallery.js';
 import {textFont} from '../../common/text-font.js';
 import {portraitBox} from '../../common/portrait-layout.js';
 import {PROGRESS_KEY,emptyProgress,decodeProgress,progressFromState,withProgress} from '../../common/progress.js';
+import {autoSpeeds,autoWait} from '../../common/auto-reader.js';
 export default {
   private:{mode:'title',backgroundSrc:'/common/title_bg.png',bodySrc:'',bodySecond:'',bodyThird:'',portraitWidth:200,portraitLeft:116,portraitSecondLeft:216,speaker:'',displayText:'',chapterLabel:'',speakerFont:'sans-serif',dialogueFont:'sans-serif',chapterFont:'sans-serif',browseFont:'sans-serif',overwriteFont:'sans-serif',cgFont:'sans-serif',
-    options:[],loading:false,errorText:'',hasNextChapter:true,afterUnlocked:false,fontSize:24,textSpeed:30,speedLabel:'显示速度：逐字',fontLabel:'字号：标准',progressLabel:'红米手表 5 · 图文版',
+    options:[],loading:false,errorText:'',hasNextChapter:true,afterUnlocked:false,fontSize:24,textSpeed:30,autoEnabled:false,autoSpeed:1,autoLabel:'自动播放：关闭',autoSpeedLabel:'自动速度：标准',speedLabel:'显示速度：逐字',fontLabel:'字号：标准',progressLabel:'红米手表 5 · 图文版',
     portraitHeight:286,portraitTop:0,portraitSecondWidth:200,portraitSecondHeight:286,portraitSecondTop:0,portraitThirdWidth:144,portraitThirdHeight:286,portraitThirdTop:0,portraitThirdLeft:288,
     slotTitle:'',slotPage:0,slotPageLabel:'',slotRows:[],storageBusy:false,overwriteTitle:'',overwriteDetail:'',endingLabel:'本篇阅读完毕',
     galleryPage:0,galleryPageLabel:'',galleryTop:[],galleryBottom:[],cgIndex:0,cgVariant:0,cgSrc:'',cgLabel:'',browseRows:[],browseTitle:'',browseLabel:'',browsePage:0},
   onInit(){
-    this.session=newState();this.cachedChapter=0;this.ops=[];this.loadSequence=0;this.timer=null;this.fullText='';this.resumeMode='play';
+    this.session=newState();this.cachedChapter=0;this.ops=[];this.loadSequence=0;this.timer=null;this._autoTimer=null;this._autoGeneration=0;this.autoEnabled=false;this._touchReading=false;this._needsFrame=false;this.fullText='';this.resumeMode='play';
     this._slotsSequence=0;this._gallerySequence=0;this._slotData=[];this._galleryCatalog=[];this._galleryTotal=0;this._slotsReturnMode='title';this._slotRole='load';
     this._progress=emptyProgress();this._progressWriteBusy=false;this._progressDirty=false;this._progressReady=false;this.loading=true;
-    storage.get({complete:()=>{},key:'stella_rw5_settings_v1',success:data=>{try{const s=JSON.parse(data);this.fontSize=s.fontSize===28?28:24;this.textSpeed=s.textSpeed===0?0:30;this.refreshSettings();}catch(e){}},fail:()=>{}});
+    storage.get({complete:()=>{},key:'stella_rw5_settings_v1',success:data=>{try{const s=JSON.parse(data);this.fontSize=s.fontSize===28?28:24;this.textSpeed=s.textSpeed===0?0:30;this.autoSpeed=s.autoSpeed===0||s.autoSpeed===2?s.autoSpeed:1;this.refreshSettings();}catch(e){}},fail:()=>{}});
     this.readProgress();
     console.log('STELLA_RW5 title ready');
   },
   backgroundLoaded(){console.log('STELLA_RW5 background loaded',this.mode,this.backgroundSrc);},
   backgroundError(){console.log('STELLA_RW5 background failed',this.mode,this.backgroundSrc);},
-  clearTyping(){if(this.timer!==null){clearTimeout(this.timer);this.timer=null;}},
-  onShow(){this._hidden=false;if(this._chapterSkip&&this.timer===null)this.renderFrame();},
-    onHide(){this._hidden=true;this.clearTyping();if(!this._chapterSkip&&this.mode==='play')this.displayText=this.fullText;},
-  onDestroy(){this.clearTyping();this.loadSequence++;this._slotsSequence++;this._gallerySequence++;},
+  clearTyping(){this.clearAuto();if(this.timer!==null){clearTimeout(this.timer);this.timer=null;}},
+  clearAuto(){if(this._autoTimer!=null)clearTimeout(this._autoTimer);this._autoTimer=null;this._autoGeneration=(this._autoGeneration||0)+1;},
+  armAuto(){
+    this.clearAuto();if(!this.autoEnabled||this._hidden||this._touchReading||this._needsFrame||this.loading||this.storageBusy||this.mode!=='play'||this.displayText!==this.fullText)return;
+    const generation=this._autoGeneration,chapter=this.session.chapter,cursor=this.session.cursor;
+    this._autoTimer=setTimeout(()=>{if(generation!==this._autoGeneration)return;this._autoTimer=null;if(!this.autoEnabled||this._hidden||this._touchReading||this.loading||this.storageBusy||this.mode!=='play'||this.session.chapter!==chapter||this.session.cursor!==cursor)return;console.log('STELLA_RW5 auto advance',chapter,cursor);this.advance();},autoWait(this.autoSpeed,this.fullText.length));
+  },
+  stopAuto(){this.autoEnabled=false;this.clearAuto();this.refreshSettings();},
+  toggleAuto(){this.autoEnabled=!this.autoEnabled;this.clearAuto();this.refreshSettings();console.log('STELLA_RW5 auto enabled',this.autoEnabled);},
+  cycleAutoSpeed(){this.autoSpeed=(this.autoSpeed+1)%3;this.refreshSettings();this.persistSettings();console.log('STELLA_RW5 auto speed',this.autoSpeed);},
+  onShow(){this._hidden=false;if(this._needsFrame||(this._chapterSkip&&this.timer===null))this.renderFrame();else this.armAuto();},
+  onHide(){this._hidden=true;this._touchReading=false;this.clearTyping();if(!this._chapterSkip&&this.mode==='play')this.displayText=this.fullText;},
+  onDestroy(){this._needsFrame=false;this.stopAuto();this.clearTyping();this.loadSequence++;this._slotsSequence++;this._gallerySequence++;},
   readProgress(){this.loading=true;storage.get({complete:()=>{},key:PROGRESS_KEY,default:'',success:data=>{try{this._progress=decodeProgress(data);this._progressReady=true;this.refreshProgress();this.loading=false;}catch(e){this.fail(e.message);}},fail:()=>{this.fail('通关记录读取失败，请返回标题重试');}});},
   startAfterStory(){if(this.loading||!this._progressReady)return;if(!this.afterUnlocked){this.toast('请先完成正篇');return;}this.clearTyping();this._chapterSkip=null;this.session=withProgress(newState(catalog.afterInitial,true),this._progress);this.cachedChapter=0;this._autoHops=0;console.log('STELLA_RW5 after story start');this.renderFrame();},
   openSettings(){if(this.loading)return;this.clearTyping();this.refreshSettings();this.mode='settings';},
-  exitApplication(){this._chapterSkip=null;this.clearTyping();this.loadSequence++;this._slotsSequence++;this._gallerySequence++;this.$app.exit();},
+  exitApplication(){this._needsFrame=false;this.stopAuto();this._chapterSkip=null;this.clearTyping();this.loadSequence++;this._slotsSequence++;this._gallerySequence++;this.$app.exit();},
   startNew(){if(this.loading||!this._progressReady)return;this.clearTyping();this.session=withProgress(newState(catalog.flowScene,true),this._progress);this.cachedChapter=0;this._autoHops=0;this.renderFrame();},
   refreshProgress(){this.progressLabel='红米手表 5 · 图文版';this.afterUnlocked=!!this._progress.variables['sf.stella_main_clear'];},
   syncProgress(){
@@ -155,13 +167,13 @@ export default {
     },fail:(data,code)=>{if(seq===this.loadSequence)this.fail('第 '+chapter+' 章读取失败：'+code+' '+String(data||'').slice(0,100));}});
   },
   renderFrame(){
-    this.clearTyping();this.readChapter(this.session.chapter,()=>{
+    this._needsFrame=true;this.clearTyping();this.readChapter(this.session.chapter,()=>{
       if(this._hidden)return;
       try{
         const f=this._chapterSkip?readChapterSkip(this.ops,this.session,this._chapterSkip,this.opsBase,catalog.scenes[String(this.session.chapter)].length):readFrame(this.ops,this.session,this.opsBase,catalog.scenes[String(this.session.chapter)].length);
         this.syncProgress();
         if(f.type==='jump'||f.type==='yield'){this._autoHops=(this._autoHops||0)+1;if(this._autoHops>1000)throw new Error('此章节无法继续，故事阅读完毕');this.timer=setTimeout(()=>{this.timer=null;this.renderFrame();},0);return;}this._autoHops=0;this._chapterSkip=null;this.loading=false;
-        this.backgroundSrc=imagePath(this.session.background);
+        this._needsFrame=false;this.backgroundSrc=imagePath(this.session.background);
         const bodies=this.session.bodies||[];this.bodySrc=bodies[0]?imagePath(bodies[0]):'';this.bodySecond=bodies[1]?imagePath(bodies[1]):'';this.bodyThird=bodies[2]?imagePath(bodies[2]):'';
         const first=portraitBox(this.bodySrc,bodies.length,0),second=portraitBox(this.bodySecond,bodies.length,1),third=portraitBox(this.bodyThird,bodies.length,2);
         this.portraitWidth=first.width;this.portraitHeight=first.height;this.portraitTop=first.top;this.portraitLeft=first.left;
@@ -170,27 +182,28 @@ export default {
         this.chapterLabel=this.visibleText(catalog.scenes[String(this.session.rootChapter)].name);this.chapterFont=textFont(this.chapterLabel);this.hasNextChapter=!this.session.ended;
         if(f.type==='map'){this.renderMap(f);return;}
         if(f.type==='choice'){this.options=this.visibleOptions(f.items);this.mode='choice';console.log('STELLA_RW5 choice',this.session.chapter,this.session.cursor);return;}
-        if(f.type==='end'){if(this.session.chapter===21&&this.session.progression==='story'){this.session.variables['sf.stella_main_clear']=true;this.syncProgress();console.log('STELLA_RW5 after story unlocked');}this.endingLabel=(catalog.endings[String(this.session.chapter)]||'本篇')+' · 阅读完毕';console.log('STELLA_RW5 ending',this.session.chapter,this.endingLabel);if(this.session.chapter>=101){this.toTitle();return;}this.mode='end';return;}
+        if(f.type==='end'){this.stopAuto();if(this.session.chapter===21&&this.session.progression==='story'){this.session.variables['sf.stella_main_clear']=true;this.syncProgress();console.log('STELLA_RW5 after story unlocked');}this.endingLabel=(catalog.endings[String(this.session.chapter)]||'本篇')+' · 阅读完毕';console.log('STELLA_RW5 ending',this.session.chapter,this.endingLabel);if(this.session.chapter>=101){this.toTitle();return;}this.mode='end';return;}
         this.mode='play';this.speaker=this.characterName(this.visibleText(f.speaker));this.fullText=this.visibleText(f.text).replace(/(^|\n)[ \t\u3000]{3,}/g,'$1');this.speakerFont=textFont(this.speaker);this.dialogueFont=textFont(this.fullText);this.displayText='';
         this._dialogueDragged=false;this._dialogueTouch=null;
         try{this.$element('dialogue-scroll').scrollTo({top:0,behavior:'instant'});}catch(e){}
         console.log('STELLA_RW5 frame',this.session.chapter,this.session.cursor);
-        if(this.textSpeed===0){this.displayText=this.fullText;return;}
-        const tick=()=>{this.displayText=this.fullText.slice(0,this.displayText.length+1);if(this.displayText.length<this.fullText.length)this.timer=setTimeout(tick,this.textSpeed);else this.timer=null;};tick();
+        const speed=this.textSpeed||(this.autoEnabled?30:0);if(speed===0){this.displayText=this.fullText;this.armAuto();return;}
+        const tick=()=>{this.displayText=this.fullText.slice(0,this.displayText.length+1);if(this.displayText.length<this.fullText.length)this.timer=setTimeout(tick,speed);else{this.timer=null;this.armAuto();}};tick();
       }catch(e){this.fail(e.message);}
     });
   },
-  advance(){if(this.loading||this.mode!=='play')return;if(this.timer!==null){this.clearTyping();this.displayText=this.fullText;return;}next(this.session);this.renderFrame();},
-  dialogueTouchStart(event){const touch=event.touches&&event.touches[0];this._dialogueDragged=false;this._dialogueTouch=touch?{x:touch.pageX,y:touch.pageY}:null;},
+  advance(){if(this.loading||this._needsFrame||this.mode!=='play')return;this.clearAuto();if(this.timer!==null){this.clearTyping();this.displayText=this.fullText;this.armAuto();return;}next(this.session);this.renderFrame();},
+  dialogueTouchStart(event){this._touchReading=true;this.clearAuto();const touch=event.touches&&event.touches[0];this._dialogueDragged=false;this._dialogueTouch=touch?{x:touch.pageX,y:touch.pageY}:null;},
   dialogueTouchMove(event){const touch=event.touches&&event.touches[0],start=this._dialogueTouch;if(touch&&start&&(Math.abs(touch.pageX-start.x)>10||Math.abs(touch.pageY-start.y)>10))this._dialogueDragged=true;},
+  dialogueTouchEnd(){this._touchReading=false;this.armAuto();},
   dialogueTap(){if(this._dialogueDragged)return;this.advance();},
-  dialogueScrolled(event){console.log('STELLA_RW5 dialogue scroll',this.session.chapter,this.session.cursor,event.scrollY);},
+  dialogueScrolled(event){if(this.mode==='play')this.armAuto();console.log('STELLA_RW5 dialogue scroll',this.session.chapter,this.session.cursor,event.scrollY);},
   renderMap(frame){this.loading=true;const seq=++this.loadSequence;file.readText({complete:()=>{},uri:'/common/map-preview.txt',success:data=>{if(seq!==this.loadSequence)return;try{const choices=previewMap(JSON.parse(data.text),this.session,frame);if(!choices.length)throw new Error('此地图阶段暂无支持的剧情选项，请返回标题选择其他篇章');this.options=this.visibleOptions(choices);this.mode='choice';this.loading=false;console.log('STELLA_RW5 map ready',this.session.chapter,this.session.cursor,choices.map(x=>x.value).join(','));}catch(e){this.fail(e.message);}},fail:()=>{if(seq===this.loadSequence)this.fail('地图选项读取失败');}});},
   goNextChapter(){if(this.loading||this.mode!=='menu')return;if(this.resumeMode==='choice'){this.mode='choice';this.toast('请先作出当前选择');return;}this.clearTyping();this._chapterSkip=nextChapter(this.session);if(!this._chapterSkip){this.toast('本篇已结束');return;}this._autoHops=0;this.loading=true;this.renderFrame();console.log('STELLA_RW5 safe chapter skip',this.session.chapter,this.session.cursor);},
   pick(index){if(this.mode!=='choice'||this.loading)return;choose(this.session,this.options[index],index);this.renderFrame();},
-  goBack(){if(this.loading||this.mode!=='play')return;this.clearTyping();if(previous(this.session)){if(this.session.progression==='story')withProgress(this.session,this._progress);this.renderFrame();}else this.toast('已经是第一句');},
+  goBack(){if(this.loading||this.mode!=='play')return;this.stopAuto();this.clearTyping();if(previous(this.session)){if(this.session.progression==='story')withProgress(this.session,this._progress);this.renderFrame();}else this.toast('已经是第一句');},
   showMenu(){if(this.loading||(this.mode!=='play'&&this.mode!=='choice'))return;this.clearTyping();this.displayText=this.fullText;this.resumeMode=this.mode;this.mode='menu';console.log('STELLA_RW5 menu',this.session.chapter);},
-  resume(){this.mode=this.resumeMode;},
+  resume(){this.mode=this.resumeMode;if(this.mode==='play')this.armAuto();},
   swipe(event){
     if(this.mode==='gallery'){if(event.direction==='left')this.nextGalleryPage();if(event.direction==='right')this.previousGalleryPage();return;}
     if(event.direction==='right'&&(this.mode==='play'||this.mode==='choice'))this.showMenu();
@@ -215,7 +228,7 @@ export default {
   refreshSlotRows(){const start=this.slotPage*4;const rows=[];for(let i=start;i<Math.min(start+4,SLOT_COUNT);i++)rows.push(slotRow(i,this._slotData[i]));this.slotRows=rows;this.slotPageLabel=SLOT_COUNT+' 个栏位 · 第 '+(this.slotPage+1)+' / '+Math.ceil(SLOT_COUNT/4)+' 页';},
   previousSlotPage(){if(this.loading||this.slotPage===0)return;this.slotPage--;this.refreshSlotRows();},
   nextSlotPage(){if(this.loading||this.slotPage>=Math.ceil(SLOT_COUNT/4)-1)return;this.slotPage++;this.refreshSlotRows();},
-  closeSlots(){if(this.storageBusy)return;this._slotsSequence++;this.loading=false;this.mode=this._slotsReturnMode;},
+  closeSlots(){if(this.storageBusy)return;this._slotsSequence++;this.loading=false;this.mode=this._slotsReturnMode;if(this.mode==='play')this.armAuto();},
   selectSlot(index){
     if(this.loading||this.storageBusy||this.mode!=='slots'||index<0||index>=SLOT_COUNT)return;
     const saved=this._slotData[index];
@@ -234,7 +247,7 @@ export default {
     const index=this._pendingSlotIndex,seq=this._slotsSequence,payload=this._pendingSave;payload.savedAt=Date.now();this.storageBusy=true;this.loading=true;
     storage.set({complete:()=>{},key:slotKey(index),value:JSON.stringify(payload),success:()=>{
       if(seq!==this._slotsSequence)return;this._slotData[index]=payload;this.storageBusy=false;this.loading=false;this._slotsSequence++;this.mode=this.resumeMode;
-      this.toast('已保存到存档 '+('0'+(index+1)).slice(-2));console.log('STELLA_RW5 slot saved',index+1,payload.state.chapter,payload.state.cursor);
+      this.armAuto();this.toast('已保存到存档 '+('0'+(index+1)).slice(-2));console.log('STELLA_RW5 slot saved',index+1,payload.state.chapter,payload.state.cursor);
     },fail:()=>{if(seq!==this._slotsSequence)return;this.storageBusy=false;this.loading=false;this.toast('保存失败，请重试');}});
   },
   openGallery(){
@@ -255,13 +268,13 @@ export default {
   previousCg(){if(this.cgIndex>0)this.viewCg(this.cgIndex-1);},
   nextCg(){if(this.cgIndex<this._galleryCatalog.length-1)this.viewCg(this.cgIndex+1);},
   backToGallery(){this.galleryPage=Math.floor(this.cgIndex/4);this.refreshGallery();this.mode='gallery';},
-  refreshSettings(){this.speedLabel=this.textSpeed===0?'显示速度：即时':'显示速度：逐字';this.fontLabel=this.fontSize===28?'字号：大':'字号：标准';},
-  persistSettings(){storage.set({complete:()=>{},key:'stella_rw5_settings_v1',value:JSON.stringify({fontSize:this.fontSize,textSpeed:this.textSpeed}),success:()=>{},fail:()=>{}});},
+  refreshSettings(){this.speedLabel=this.textSpeed===0?'显示速度：即时':'显示速度：逐字';this.fontLabel=this.fontSize===28?'字号：大':'字号：标准';this.autoLabel='自动播放：'+(this.autoEnabled?'开启':'关闭');this.autoSpeedLabel='自动速度：'+(autoSpeeds[this.autoSpeed]||'标准');},
+  persistSettings(){storage.set({complete:()=>{},key:'stella_rw5_settings_v1',value:JSON.stringify({fontSize:this.fontSize,textSpeed:this.textSpeed,autoSpeed:this.autoSpeed}),success:()=>{},fail:()=>{}});},
   toggleSpeed(){this.textSpeed=this.textSpeed===0?30:0;this.refreshSettings();this.persistSettings();},
   toggleFont(){this.fontSize=this.fontSize===24?28:24;this.refreshSettings();this.persistSettings();},
-  toTitle(){if(this.storageBusy)return;this._chapterSkip=null;this.syncProgress();this.writeProgress();this.clearTyping();this.loadSequence++;this._slotsSequence++;this._gallerySequence++;this.loading=false;this.mode='title';this.backgroundSrc='/common/title_bg.png';this.bodySrc='';this.bodySecond='';this.bodyThird='';if(!this._progressReady)this.readProgress();},
+  toTitle(){if(this.storageBusy)return;this._needsFrame=false;this.stopAuto();this._chapterSkip=null;this.syncProgress();this.writeProgress();this.clearTyping();this.loadSequence++;this._slotsSequence++;this._gallerySequence++;this.loading=false;this.mode='title';this.backgroundSrc='/common/title_bg.png';this.bodySrc='';this.bodySecond='';this.bodyThird='';if(!this._progressReady)this.readProgress();},
   toast(message){prompt.showToast({message,duration:1500,success:()=>{},fail:()=>{},complete:()=>{}});},
-  fail(message){this._chapterSkip=null;this.clearTyping();this.loading=false;this.mode='error';this.errorText=message;console.error('STELLA_RW5 error',message);}
+  fail(message){this.loadSequence++;this._needsFrame=false;this.stopAuto();this._chapterSkip=null;this.clearTyping();this.loading=false;this.mode='error';this.errorText=message;console.error('STELLA_RW5 error',message);}
 }
 </script>
 <style>
@@ -299,6 +312,9 @@ export default {
 .overlay{position:absolute;top:0px;left:0px;width:432px;height:514px;flex-direction:column;padding:22px 32px;}
 .menu-title{height:40px;font-size:28px;color:#174d40;text-align:left;margin-bottom:12px;}
 .menu-action{height:50px;font-size:22px;color:#ffffff;background-color:#21594d;margin-bottom:8px;text-align:center;}
+.reading-menu{padding:14px 24px;}
+.reading-header{height:36px;margin-bottom:10px;font-size:26px;}
+.reading-action{height:42px;width:384px;margin-bottom:5px;font-size:21px;}
 .muted{color:#325e4e;background-color:#dae8df;}
 .full-panel{position:absolute;top:0px;left:0px;width:432px;height:514px;flex-direction:column;padding:16px 18px;}
 .panel-title{height:36px;font-size:28px;color:#174d40;text-align:left;margin-bottom:4px;}
