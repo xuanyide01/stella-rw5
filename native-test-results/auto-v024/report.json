@@ -1,0 +1,25 @@
+{
+  "result": "passed",
+  "version": "0.2.4",
+  "variant": "stella-rw5",
+  "packageSha256": "8f0ecd067fcfaec48eced7bcae21aab8b124e88058a11a64ba4c2c6d5f70359b",
+  "packageBytes": 12212833,
+  "screen": [
+    432,
+    514
+  ],
+  "runtime": "official generic vela-watch-5.0 simulator; not physical REDMI Watch 5 firmware",
+  "physicalDeviceTested": false,
+  "initialStandardWaitWallMS": 1782,
+  "checks": [
+    "all nine menu actions fit; menu freezes auto; all three speed buttons respond",
+    "standard wait is not immediate and native auto advances successive sentences",
+    "opening menu and LOAD suspends auto; returning to text restarts it",
+    "actual long paragraph scroll does not advance while dragging; release resumes automatic reading",
+    "actual after-story choice 107:423 remains pending without selecting a branch",
+    "choosing the original confirmation resumes automatic playback at 107:424",
+    "previous sentence disables auto for manual rereading",
+    "app destruction cancels timers; restarting is manual even when previously auto",
+    "FAST speed remains available after app restart"
+  ]
+}

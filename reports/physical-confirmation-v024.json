@@ -1,0 +1,16 @@
+{
+  "game": "星之终途",
+  "version": "0.2.4",
+  "device": "REDMI Watch 5",
+  "date": "2026-10-20",
+  "reportedBy": "maintainer",
+  "physicalTestReported": true,
+  "result": "passed",
+  "userFeedback": "通过，上传github",
+  "scope": "Maintainer confirmed this 0.2.4 update passed physical testing. The feedback did not separately enumerate standard/lite coverage or individual test cases.",
+  "deliveredPackageSHA256": {
+    "stella-rw5": "8f0ecd067fcfaec48eced7bcae21aab8b124e88058a11a64ba4c2c6d5f70359b",
+    "stella-rw5-lite": "edb972427de08d7e4464c602df6452b60775e5d81fc378725beeaf7f24d41626"
+  },
+  "agentPerformedPhysicalTesting": false
+}
