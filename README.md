@@ -90,3 +90,8 @@ Node.js 与兼容编译器 aiot-toolkit **1.1.0**：`npm install --prefix tools/
 | <img src="native-test-results/auto-v024/menu-enabled.png" width="210" alt="九项菜单与自动播放"> | <img src="native-test-results/auto-v024/reading-auto.png" width="210" alt="自动阅读"> | <img src="native-test-results/auto-v024/choice-paused.png" width="210" alt="等待玩家选择"> |
 
 以上截图来自本分支对应精确安装包的官方通用 Vela 模拟器检查。实机通过记录由维护者提供；两者分别留存。历史 [0.2.1 截图](docs/screenshots/v0.2.1/)继续保留。
+
+
+## 联系方式
+
+问题反馈与交流：[shining237841@gmail.com](mailto:shining237841@gmail.com)。
