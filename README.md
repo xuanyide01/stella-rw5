@@ -74,3 +74,8 @@ Node.js 与兼容编译器 aiot-toolkit **1.1.0**：`npm install --prefix tools/
 | <img src="native-test-results/title-band-v011/reading.png" width="210" alt="阅读界面"> | <img src="native-test-results/title-band-v011/menu.png" width="210" alt="阅读菜单"> | <img src="native-test-results/title-band-v011/cg.png" width="210" alt="CG 鉴赏"> |
 
 以上为当前精确安装包的 Vela 原生模拟器截图。此前新增的 [0.2.1 历史截图目录](docs/screenshots/v0.2.1/)原文件继续保留。
+
+
+## 联系方式
+
+问题反馈与交流：[shining237841@gmail.com](mailto:shining237841@gmail.com)。
