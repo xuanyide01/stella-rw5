@@ -1,0 +1,176 @@
+{
+  "archived_at": "2026-11-01",
+  "repository": "xuanyide01/stella-rw5",
+  "versions": [
+    {
+      "tag": "band8pro-v0.1.0",
+      "files": [
+        {
+          "name": "星之终途-Band8Pro-0.1.0-SHA256.txt",
+          "bytes": 740,
+          "sha256": "9086ca5716221704d0e56976dcec89cd201e332973ff1ccbd2a25784cd4e6903"
+        },
+        {
+          "name": "星之终途-Band8Pro-0.1.0-安装说明.md",
+          "bytes": 7651,
+          "sha256": "78aaa4890797e4a81cb66400ac7137f923f7b538c5ac63d97ae20daf2545825a"
+        },
+        {
+          "name": "星之终途-Band8Pro-0.1.0-标题.png",
+          "bytes": 183070,
+          "sha256": "493cd2112ddedb137077da5101fd7a66717757e60804a63b79f32e4a73de333a"
+        },
+        {
+          "name": "星之终途-Band8Pro-0.1.0-检查报告.json",
+          "bytes": 3731,
+          "sha256": "1fb9a5807f7812220a51d09c3ff68cc64aeb8f4070853631e42f157bd189bdde"
+        },
+        {
+          "name": "星之终途-Band8Pro-0.1.0-源码.zip",
+          "bytes": 12631789,
+          "sha256": "3f54bcfbb755a6486e8870df1b60663cf1785b651ffa21100c64e5d711550773"
+        },
+        {
+          "name": "星之终途-Band8Pro-0.1.0-阅读.png",
+          "bytes": 96687,
+          "sha256": "a16bbc56d945d2170c0c7f901a819a01dbea6756eef21ca6f9c74c6ef13933f3"
+        },
+        {
+          "name": "星之终途-Band8Pro-0.1.0.bin",
+          "bytes": 9869841,
+          "sha256": "befb9e9acc4358124c9ef589e3bae220191f3baf6c7bd78cb24ec9fc69d838be"
+        },
+        {
+          "name": "星之终途-Band8Pro-0.1.0.rpk",
+          "bytes": 9869841,
+          "sha256": "befb9e9acc4358124c9ef589e3bae220191f3baf6c7bd78cb24ec9fc69d838be"
+        }
+      ]
+    },
+    {
+      "tag": "v0.1.0",
+      "files": [
+        {
+          "name": "星之终途-RW5-0.1.0-SHA256.txt",
+          "bytes": 503,
+          "sha256": "91f60cf64799df670fc6e2766d897c575e4d426da6c4f9a365ec4ba547c1a70d"
+        },
+        {
+          "name": "星之终途-RW5-0.1.0-安装说明.md",
+          "bytes": 6885,
+          "sha256": "b89b1d4ce1a3662095463d859767fb5893fc87be442da407adc4805def24b387"
+        },
+        {
+          "name": "星之终途-RW5-0.1.0-检查报告.json",
+          "bytes": 9995,
+          "sha256": "881e7a831ddc574482d3e43e600fe7a35e1936eac079c01f063464bd5844a7d9"
+        },
+        {
+          "name": "星之终途-RW5-0.1.0-源码.zip",
+          "bytes": 11526749,
+          "sha256": "b6b1aacab3812946098fcb98f10195d9ce8475a099af70a06f862a3b83cb45d0"
+        },
+        {
+          "name": "星之终途-RW5-0.1.0.bin",
+          "bytes": 9980982,
+          "sha256": "32c8b6163ab6414fee4289719e4fc47d7c6782da8f3b61b5a92459d96d0f3cad"
+        },
+        {
+          "name": "星之终途-RW5-0.1.0.rpk",
+          "bytes": 9980982,
+          "sha256": "32c8b6163ab6414fee4289719e4fc47d7c6782da8f3b61b5a92459d96d0f3cad"
+        }
+      ]
+    },
+    {
+      "tag": "v0.2.0",
+      "files": [
+        {
+          "name": "星之终途-RW5-0.2.0-SHA256.txt",
+          "bytes": 503,
+          "sha256": "964213836373db7da9b7851068e21614184a6b9a4e397e8fce0d5b202cdfd79a"
+        },
+        {
+          "name": "星之终途-RW5-0.2.0-后日谈界面.png",
+          "bytes": 108802,
+          "sha256": "1712d6a370f1d06a4020861084a7824cf28b2d2ab7fb5c511b7bb04dc9a991e8"
+        },
+        {
+          "name": "星之终途-RW5-0.2.0-安装说明.md",
+          "bytes": 9923,
+          "sha256": "2e37a3709e1db7683f44d8ec360b0bb4b8eb3b7aa1f4d9f9542a7287e125216f"
+        },
+        {
+          "name": "星之终途-RW5-0.2.0-标题.png",
+          "bytes": 158062,
+          "sha256": "778c016d4bd962a6725b07db4cdc550fa2a1ca2eff6c2e705e42ecf7cb661c67"
+        },
+        {
+          "name": "星之终途-RW5-0.2.0-检查报告.json",
+          "bytes": 6961,
+          "sha256": "0830233feb34c7e67784dc0dca9394b7a707685ea48a3495761b70c065acc8c4"
+        },
+        {
+          "name": "星之终途-RW5-0.2.0-源码.zip",
+          "bytes": 17195012,
+          "sha256": "5e8a1e701bdcc9c8fc9bda010fdfa79018546e1e85e16c9c688605b29ea1b9c3"
+        },
+        {
+          "name": "星之终途-RW5-0.2.0.bin",
+          "bytes": 12232657,
+          "sha256": "50cdeb0fbd2720f88b13a5d60233bfdfce40d685ede6dd2a4b6e0f4529c676af"
+        },
+        {
+          "name": "星之终途-RW5-0.2.0.rpk",
+          "bytes": 12232657,
+          "sha256": "50cdeb0fbd2720f88b13a5d60233bfdfce40d685ede6dd2a4b6e0f4529c676af"
+        }
+      ]
+    },
+    {
+      "tag": "v0.2.2",
+      "files": [
+        {
+          "name": "星之终途-RW5-0.2.2-轻量版-SHA256.txt",
+          "bytes": 553,
+          "sha256": "79e41c5f90d67868ba4001321afa00180a56a09c27b7c416d5de94117852a27d"
+        },
+        {
+          "name": "星之终途-RW5-0.2.2-轻量版-安装说明.md",
+          "bytes": 14122,
+          "sha256": "765ecd262d12c2f75ec16485841801603b5f0ac092cb0e7c0b37b4aaca17cc32"
+        },
+        {
+          "name": "星之终途-RW5-0.2.2-轻量版-标题.png",
+          "bytes": 231886,
+          "sha256": "e507faab7074d2c448376372a660b2c250eb6057b3d00e01777e874fc182f2e6"
+        },
+        {
+          "name": "星之终途-RW5-0.2.2-轻量版-检查报告.json",
+          "bytes": 10326,
+          "sha256": "9db485dfa0557a6f55a0cf6ee75864036dfc65abf916463c62a56c7f21048553"
+        },
+        {
+          "name": "星之终途-RW5-0.2.2-轻量版-源码.zip",
+          "bytes": 23615473,
+          "sha256": "928a2d5d7fde09b57a3bba821ed2f6674fa8e6d14299a72e8ddbd7e15391d3ac"
+        },
+        {
+          "name": "星之终途-RW5-0.2.2-轻量版-画质对比.png",
+          "bytes": 1040935,
+          "sha256": "667269b3905973ce5a6750dda273bc3dfe8099ca61ace289e1c2c646975700aa"
+        },
+        {
+          "name": "星之终途-RW5-0.2.2-轻量版.bin",
+          "bytes": 9880929,
+          "sha256": "7a7a69c76974bcf3bb7559052341cddc45d1acbae0637901e5be0b30270efabf"
+        },
+        {
+          "name": "星之终途-RW5-0.2.2-轻量版.rpk",
+          "bytes": 9880929,
+          "sha256": "7a7a69c76974bcf3bb7559052341cddc45d1acbae0637901e5be0b30270efabf"
+        }
+      ]
+    }
+  ]
+}
