@@ -1,0 +1,8 @@
+{
+  "scope": "isolated layout regression simulator, port 43154; the user preview at 43152 was not modified",
+  "priorAttempt": "Stopping the old 0.1.2 application and immediately hot-installing 0.1.3 triggered a generic simulator inspector uv_loop_init failure during old application teardown.",
+  "recovery": "The owned layout simulator was cold restarted. The installed 0.1.3 package was confirmed by pm get; reported-path screenshots and full native regression then passed.",
+  "firstInputAfterColdBoot": "An early title input was not handled; the repeat after the runtime settled succeeded. Successful screenshot runs are separately recorded.",
+  "failedAttemptIsNotCountedAsPassed": true,
+  "physicalDeviceTested": false
+}

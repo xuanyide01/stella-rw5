@@ -1,0 +1,14 @@
+{
+  "version": "0.1.1",
+  "size": [
+    128,
+    128
+  ],
+  "mode": "RGBA",
+  "bitDepth": 8,
+  "colorType": 6,
+  "transparentCorners": true,
+  "iconSHA256": "c4964427d39036da1fd47d0f1658931b315231c0dc1b1779c5fee962b468801e",
+  "packageSHA256": "22388ea38c37f262318bc3199af81f25b56fae94ef7a49369ea077b23ea547a9",
+  "pngInfo": {}
+}

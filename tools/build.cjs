@@ -3,6 +3,10 @@ const fs=require('fs'),path=require('path');
 const watchConfig=path.resolve('src/config-watch.json');
 if(!fs.existsSync(watchConfig))throw Error('src/config-watch.json is required to generate the watch manifest');
 JSON.parse(fs.readFileSync(watchConfig,'utf8'));
+// Match the physically verified Paper Band 8 Pro launcher resource size.
+const icon=fs.readFileSync(path.resolve('src/common/logo.png'));
+if(icon.toString('hex',0,8)!=='89504e470d0a1a0a'||icon.readUInt32BE(16)!==128||icon.readUInt32BE(20)!==128||icon[25]!==6)
+ throw Error('Band launcher icon must be a 128x128 RGBA PNG');
 const toolkit=process.env.WATCH_COMPAT_TOOLKIT||path.join(__dirname,'compat-toolkit/node_modules/aiot-toolkit');
 if(!fs.existsSync(path.join(toolkit,'package.json')))throw Error('Install the compatible compiler: npm install --prefix tools/compat-toolkit --ignore-scripts');
 if(JSON.parse(fs.readFileSync(path.join(toolkit,'package.json'),'utf8')).version!=='1.1.0')throw Error('Compatible compiler must be aiot-toolkit 1.1.0');

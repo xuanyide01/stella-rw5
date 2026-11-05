@@ -1,0 +1,96 @@
+{
+  "game": "星之终途",
+  "version": "0.1.4",
+  "date": "2026-11-04",
+  "device": "Xiaomi Smart Band 8 Pro",
+  "package": {
+    "file": "com.codex.stella.band8pro.debug.0.1.4.rpk",
+    "version": "0.1.4",
+    "bytes": 9830657,
+    "expandedBytes": 11080169,
+    "entries": 1164,
+    "sha256": "a05831200b73e1d9f98690dc25a579d6fe0333911f0ccb8285c82699506dc042",
+    "certificateSha256": "4e8e1ee24968b0dad6d0956a7e14d848b38b22a203f39c389a45d8737bdc4585",
+    "zipCRCValid": true,
+    "outerSignatureValid": true,
+    "innerSignatureValid": true,
+    "allFileDigestsValid": true,
+    "signedFiles": 1126,
+    "result": "passed",
+    "date": "2026-11-04",
+    "changedSourceFiles": [
+      "src/common/logo.png",
+      "src/manifest.json"
+    ],
+    "changedPackageEntries": [
+      "META-INF/CERT",
+      "META-INF/build.txt",
+      "app.js",
+      "common/logo.png",
+      "manifest-watch.json",
+      "manifest.json"
+    ],
+    "iconDimensions": [
+      128,
+      128
+    ],
+    "previousIconDimensions": [
+      192,
+      192
+    ],
+    "referenceGame": "纸上的魔法使",
+    "referenceIconDimensions": [
+      128,
+      128
+    ],
+    "circularRGBAIcon": true,
+    "allGameplayCodeAndResourcesExceptLauncherIconUnchanged": true,
+    "compiledAppOnlyVersionMetadataChanged": true,
+    "defaultFontAndImageAuditPassed": true,
+    "priorPackageSHA256": "0612608c29285fff22a8acd15fc4ac04b4a4793ed04c3ea240b8566c721f19ed",
+    "currentVersionIndependentlyNativeTested": false,
+    "physicalDeviceTested": true
+  },
+  "fontAndResourceAudit": {
+    "file": "com.codex.stella.band8pro.debug.0.1.4.rpk",
+    "version": "0.1.4",
+    "bytes": 9830657,
+    "expandedBytes": 11080169,
+    "entries": 1164,
+    "sha256": "a05831200b73e1d9f98690dc25a579d6fe0333911f0ccb8285c82699506dc042",
+    "certificateSha256": "4e8e1ee24968b0dad6d0956a7e14d848b38b22a203f39c389a45d8737bdc4585",
+    "zipCRCValid": true,
+    "outerSignatureValid": true,
+    "innerSignatureValid": true,
+    "allFileDigestsValid": true,
+    "signedFiles": 1126,
+    "watchManifestPresentAndCorrect": true,
+    "decodedImages": 1080,
+    "preservedPNGs": 312,
+    "allCommonResourcesMatchSource": true,
+    "circularRGBAIcon": true,
+    "textFontCoverageValid": true,
+    "physicalDeviceTested": false
+  },
+  "automatedTests": {
+    "passed": 28,
+    "failed": 0
+  },
+  "priorNativeEvidenceVersion": "0.1.3",
+  "independentNativeTested": false,
+  "physicalDeviceTested": true,
+  "physicalRetestPending": false,
+  "priorPhysicalFeedback": {
+    "version": "0.1.3",
+    "reportedBy": "maintainer",
+    "issue": "Launcher icon oversized on Xiaomi Smart Band 8 Pro"
+  },
+  "physicalConfirmation": {
+    "date": "2026-11-05",
+    "reportedBy": "maintainer",
+    "device": "Xiaomi Smart Band 8 Pro",
+    "scope": "Launcher icon size fix in 0.1.4",
+    "result": "passed",
+    "feedback": "通过，上传github"
+  }
+}

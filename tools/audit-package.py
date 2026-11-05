@@ -28,8 +28,8 @@ for name in z.namelist():
             pngs+=1
             if '/images/' in name:assert im.mode in ['RGBA','P'] and im.convert('RGBA').getchannel('A').getextrema()[0]==0,name
 logo=Image.open(io.BytesIO(z.read('common/logo.png')))
-assert logo.size==(192,192) and logo.mode=='RGBA'
-assert all(logo.getpixel(pt)[3]==0 for pt in [(0,0),(191,0),(0,191),(191,191)])
+assert logo.size==(128,128) and logo.mode=='RGBA'
+assert all(logo.getpixel(pt)[3]==0 for pt in [(0,0),(127,0),(0,127),(127,127)])
 default_path=Path(sys.argv[1]) if len(sys.argv)>1 else root.parent/'clannad-probe/native-default-font.ttf'
 default=TTFont(default_path).getBestCmap()
 extra=TTFont(io.BytesIO(z.read('common/stella-extra.otf'))).getBestCmap()
