@@ -1,0 +1,15 @@
+{
+  "result": "passed",
+  "version": "0.2.5",
+  "variant": "lite",
+  "runtime": "official generic Vela Watch 5.0 simulator, 432×514",
+  "packageSha256": "5db14fa92c2b3ad5b4ec346c5553d97d84cde0fa9fb4abd4ab8bb8dbf5b26dae",
+  "physicalDeviceTested": false,
+  "checks": [
+    "Long press on empty slot does not save; short press saves to 01 and 02",
+    "Long press on occupied LOAD row opens confirmation without activating its confirm button",
+    "Cancel preserves both saves; confirm clears only 02; short press loads 01",
+    "Slot 02 can be saved again; short press on occupied SAVE row opens overwrite confirmation",
+    "Long press and confirm in SAVE clears 02; deletion persists after app restart"
+  ]
+}
