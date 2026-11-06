@@ -61,16 +61,16 @@
       <text class="panel-title">{{slotTitle}}</text>
       <text class="panel-subtitle">{{slotPageLabel}}</text>
       <div class="slot-list">
-        <div for="{{slotRows}}" tid="number" class="slot-card" style="background-color: {{$item.occupied ? '#dceae3' : '#edf3ef'}};" onclick="selectSlot($item.index)">
+        <div for="{{slotRows}}" tid="number" class="slot-card" style="background-color: {{$item.occupied ? '#dceae3' : '#edf3ef'}};" ontouchstart="beginSlotTouch" onclick="selectSlot($item.index)" onlongpress="requestSlotDelete($item.index)">
           <text class="slot-title">{{$item.title}}</text><text class="slot-meta" style="font-family: {{$item.metaFont}};">{{$item.meta}}</text><text class="slot-preview" style="font-family: {{$item.previewFont}};">{{$item.preview}}</text>
         </div>
       </div>
       <div class="pager"><text class="pager-action" onclick="previousSlotPage">‹ 上一页</text><text class="pager-action" onclick="closeSlots">返回</text><text class="pager-action" onclick="nextSlotPage">下一页 ›</text></div>
     </div>
-    <div if="{{mode === 'overwrite'}}" class="overlay">
-      <text class="menu-title">{{overwriteTitle}}</text>
-      <text class="confirm-text" style="font-family: {{overwriteFont}};">{{overwriteDetail}}</text>
-      <text class="menu-action" onclick="confirmOverwrite">确认覆盖</text><text class="menu-action muted" onclick="cancelOverwrite">取消</text>
+    <div if="{{mode === 'overwrite' || mode === 'deleteSlot'}}" class="overlay">
+      <text class="menu-title">{{slotConfirmTitle}}</text>
+      <text class="confirm-text" style="font-family: {{slotConfirmFont}};">{{slotConfirmDetail}}</text>
+      <text class="menu-action" onclick="confirmSlotAction">{{mode === 'deleteSlot' ? '确认删除' : '确认覆盖'}}</text><text class="menu-action muted" onclick="cancelSlotAction">取消</text>
     </div>
     <div if="{{mode === 'gallery'}}" class="full-panel">
       <text class="panel-title">CG 鉴赏</text><text class="panel-subtitle">{{galleryPageLabel}}</text>
@@ -101,10 +101,10 @@ import {portraitBox} from '../../common/portrait-layout.js';
 import {PROGRESS_KEY,emptyProgress,decodeProgress,progressFromState,withProgress} from '../../common/progress.js';
 import {autoSpeeds,autoWait} from '../../common/auto-reader.js';
 export default {
-  private:{mode:'title',backgroundSrc:'/common/title_bg.png',bodySrc:'',bodySecond:'',bodyThird:'',portraitWidth:200,portraitLeft:116,portraitSecondLeft:216,speaker:'',displayText:'',chapterLabel:'',speakerFont:'sans-serif',dialogueFont:'sans-serif',chapterFont:'sans-serif',browseFont:'sans-serif',overwriteFont:'sans-serif',cgFont:'sans-serif',
+  private:{mode:'title',backgroundSrc:'/common/title_bg.png',bodySrc:'',bodySecond:'',bodyThird:'',portraitWidth:200,portraitLeft:116,portraitSecondLeft:216,speaker:'',displayText:'',chapterLabel:'',speakerFont:'sans-serif',dialogueFont:'sans-serif',chapterFont:'sans-serif',browseFont:'sans-serif',slotConfirmFont:'sans-serif',cgFont:'sans-serif',
     options:[],loading:false,errorText:'',hasNextChapter:true,afterUnlocked:false,fontSize:24,textSpeed:30,autoEnabled:false,autoSpeed:1,autoLabel:'自动播放：关闭',autoSpeedLabel:'自动速度：标准',speedLabel:'显示速度：逐字',fontLabel:'字号：标准',progressLabel:'红米手表 5 · 图文版',
     portraitHeight:286,portraitTop:0,portraitSecondWidth:200,portraitSecondHeight:286,portraitSecondTop:0,portraitThirdWidth:144,portraitThirdHeight:286,portraitThirdTop:0,portraitThirdLeft:288,
-    slotTitle:'',slotPage:0,slotPageLabel:'',slotRows:[],storageBusy:false,overwriteTitle:'',overwriteDetail:'',endingLabel:'本篇阅读完毕',
+    slotTitle:'',slotPage:0,slotPageLabel:'',slotRows:[],storageBusy:false,slotConfirmTitle:'',slotConfirmDetail:'',endingLabel:'本篇阅读完毕',
     galleryPage:0,galleryPageLabel:'',galleryTop:[],galleryBottom:[],cgIndex:0,cgVariant:0,cgSrc:'',cgLabel:'',browseRows:[],browseTitle:'',browseLabel:'',browsePage:0},
   onInit(){
     this.session=newState();this.cachedChapter=0;this.ops=[];this.loadSequence=0;this.timer=null;this._autoTimer=null;this._autoGeneration=0;this.autoEnabled=false;this._touchReading=false;this._needsFrame=false;this.fullText='';this.resumeMode='play';
@@ -212,7 +212,7 @@ export default {
   loadGame(){this.openSlots('load');},
   openSlots(role){
     if(this.loading||this.storageBusy)return;this.clearTyping();this._slotsReturnMode=this.mode;this._slotRole=role;
-    this._pendingSave=role==='save'?createSave(this.session,this.resumeMode,Date.now()):null;
+    this._pendingSave=role==='save'?createSave(this.session,this.resumeMode,Date.now()):null;this._slotHeld=false;
     this.slotTitle=role==='save'?'选择保存栏位':'选择读取栏位';this.slotPage=0;this.slotRows=[];this.mode='slots';this.loading=true;
     const seq=++this._slotsSequence;this._slotData=Array(SLOT_COUNT).fill(null);
     const ready=()=>{if(seq!==this._slotsSequence)return;this.loading=false;this.refreshSlotRows();console.log('STELLA_RW5 slots ready',role);};
@@ -220,28 +220,74 @@ export default {
       if(seq!==this._slotsSequence)return;
       if(index+1<SLOT_COUNT){setTimeout(()=>readSlot(index+1),0);return;}
       if(this._slotData[0]){ready();return;}
-      storage.get({complete:()=>{},key:LEGACY_KEY,default:'',success:data=>{if(seq!==this._slotsSequence)return;try{const old=decodeSave(data);if(old){old.legacy=true;this._slotData[0]=old;}}catch(e){}ready();},fail:ready});
+      storage.get({complete:()=>{},key:LEGACY_KEY,default:'',success:data=>{if(seq!==this._slotsSequence)return;try{const old=decodeSave(data);if(old){old.legacy=true;this._slotData[0]=old;}}catch(e){this._slotData[0]={invalid:true,legacy:true};}ready();},fail:ready});
     };
     const readSlot=i=>{if(seq!==this._slotsSequence)return;storage.get({complete:()=>{},key:slotKey(i),default:'',success:data=>{if(seq!==this._slotsSequence)return;try{this._slotData[i]=decodeSave(data);}catch(e){this._slotData[i]={invalid:true};}finish(i);},fail:()=>{if(seq!==this._slotsSequence)return;this._slotData[i]={invalid:true};finish(i);}});};
     readSlot(0);
   },
-  refreshSlotRows(){const start=this.slotPage*4;const rows=[];for(let i=start;i<Math.min(start+4,SLOT_COUNT);i++)rows.push(slotRow(i,this._slotData[i]));this.slotRows=rows;this.slotPageLabel=SLOT_COUNT+' 个栏位 · 第 '+(this.slotPage+1)+' / '+Math.ceil(SLOT_COUNT/4)+' 页';},
+  refreshSlotRows(){const start=this.slotPage*4;const rows=[];for(let i=start;i<Math.min(start+4,SLOT_COUNT);i++)rows.push(slotRow(i,this._slotData[i]));this.slotRows=rows;this.slotPageLabel=SLOT_COUNT+' 个栏位 · 第 '+(this.slotPage+1)+' / '+Math.ceil(SLOT_COUNT/4)+' 页 · 长按删除';},
   previousSlotPage(){if(this.loading||this.slotPage===0)return;this.slotPage--;this.refreshSlotRows();},
   nextSlotPage(){if(this.loading||this.slotPage>=Math.ceil(SLOT_COUNT/4)-1)return;this.slotPage++;this.refreshSlotRows();},
   closeSlots(){if(this.storageBusy)return;this._slotsSequence++;this.loading=false;this.mode=this._slotsReturnMode;if(this.mode==='play')this.armAuto();},
+  beginSlotTouch(){this._slotHeld=false;},
   selectSlot(index){
-    if(this.loading||this.storageBusy||this.mode!=='slots'||index<0||index>=SLOT_COUNT)return;
+    if(this._slotHeld||this.loading||this.storageBusy||this.mode!=='slots'||index<0||index>=SLOT_COUNT)return;
     const saved=this._slotData[index];
     if(this._slotRole==='load'){
       if(!saved){this.toast('这个栏位还没有存档');return;}if(saved.invalid){this.toast('这个存档无法读取');return;}
       try{this.session=restore(saved.state);if(this.session.progression==='story')withProgress(this.session,this._progress);this.cachedChapter=0;this._slotsSequence++;this.renderFrame();console.log('STELLA_RW5 slot loaded',index+1,this.session.chapter,this.session.cursor);}catch(e){this.toast(e.message);}return;
     }
     this._pendingSlotIndex=index;
-    if(saved){const row=slotRow(index,saved);this.overwriteTitle='覆盖'+row.title+'？';this.overwriteDetail=row.meta+'\n覆盖后将保存当前进度。';this.overwriteFont=textFont(this.overwriteDetail);this.mode='overwrite';console.log('STELLA_RW5 overwrite',index+1);return;}
+    if(saved){this.showSlotConfirmation('overwrite',index,saved,'覆盖','覆盖后将保存当前进度。');console.log('STELLA_RW5 overwrite',index+1);return;}
     this.commitSlot();
   },
-  confirmOverwrite(){if(this.mode==='overwrite')this.commitSlot();},
-  cancelOverwrite(){if(!this.storageBusy)this.mode='slots';},
+  requestSlotDelete(index){
+    if(this.loading||this.storageBusy||this.mode!=='slots'||index<0||index>=SLOT_COUNT)return;
+    this._slotHeld=true;
+    const saved=this._slotData[index];
+    if(!saved)return;
+    this._pendingSlotIndex=index;
+    this.showSlotConfirmation('deleteSlot',index,saved,'删除','删除后无法恢复。');
+    console.log('STELLA_RW5 delete confirmation',index+1);
+  },
+  showSlotConfirmation(mode,index,saved,action,detail){
+    const row=slotRow(index,saved);
+    this.slotConfirmTitle=action+row.title+'？';
+    this.slotConfirmDetail=row.meta+'\n'+detail;
+    this.slotConfirmFont=textFont(this.slotConfirmDetail);
+    this.mode=mode;
+  },
+  confirmSlotAction(){
+    if(this.mode==='overwrite')this.commitSlot();
+    else if(this.mode==='deleteSlot')this.deleteSlot();
+  },
+  cancelSlotAction(){if(!this.storageBusy)this.mode='slots';},
+  deleteSlot(){
+    if(this.mode!=='deleteSlot'||this.storageBusy)return;
+    const index=this._pendingSlotIndex,seq=this._slotsSequence,key=slotKey(index);
+    const saved=this._slotData[index];
+    this.storageBusy=true;this.loading=true;
+    const fail=()=>{
+      if(seq!==this._slotsSequence)return;
+      this.storageBusy=false;this.loading=false;this.toast('删除失败，请重试');
+    };
+    const done=()=>{
+      if(seq!==this._slotsSequence)return;
+      this._slotData[index]=null;this.refreshSlotRows();this.mode='slots';
+      this.storageBusy=false;this.loading=false;this.toast('已删除'+slotRow(index,null).title);
+      console.log('STELLA_RW5 slot deleted',index+1);
+    };
+    const clear=(key,success)=>storage.set({complete:()=>{},key,value:'',success,fail});
+    if(index!==0){clear(key,done);return;}
+    if(saved.legacy){clear(LEGACY_KEY,done);return;}
+    // Clear the legacy fallback first so deleting the current slot 01 cannot reveal an older save.
+    storage.get({complete:()=>{},key:LEGACY_KEY,default:'',fail,success:data=>{
+      if(seq!==this._slotsSequence)return;
+      const clearCurrent=()=>{if(seq===this._slotsSequence)clear(key,done);};
+      if(data)clear(LEGACY_KEY,clearCurrent);
+      else clearCurrent();
+    }});
+  },
   commitSlot(){
     if(this.storageBusy||!this._pendingSave)return;
     const index=this._pendingSlotIndex,seq=this._slotsSequence,payload=this._pendingSave;payload.savedAt=Date.now();this.storageBusy=true;this.loading=true;

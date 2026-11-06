@@ -1,0 +1,60 @@
+{
+  "game": "星之终途",
+  "variant": "stella-rw5",
+  "version": "0.2.5",
+  "date": "2026-11-06",
+  "package": {
+    "file": "com.codex.stella.rw5.debug.0.2.5.rpk",
+    "version": "0.2.5",
+    "bytes": 12213249,
+    "expandedBytes": 13465736,
+    "entries": 1164,
+    "sha256": "2f345786491b974546600d83b6c394f03f96a04f67220ef9365250392213e993",
+    "certificateSha256": "4e8e1ee24968b0dad6d0956a7e14d848b38b22a203f39c389a45d8737bdc4585",
+    "zipCRCValid": true,
+    "outerSignatureValid": true,
+    "innerSignatureValid": true,
+    "allFileDigestsValid": true,
+    "signedFiles": 1126,
+    "watchManifestPresentAndCorrect": true,
+    "decodedImages": 1080,
+    "preservedPNGs": 312,
+    "allCommonResourcesMatchSource": true,
+    "circularRGBAIcon": true,
+    "textFontCoverageValid": true,
+    "physicalDeviceTested": false
+  },
+  "automatedTests": {
+    "passed": 31,
+    "failed": 0
+  },
+  "native": {
+    "result": "passed",
+    "version": "0.2.5",
+    "variant": "standard",
+    "runtime": "official generic Vela Watch 5.0 simulator, 432×514",
+    "packageSha256": "2f345786491b974546600d83b6c394f03f96a04f67220ef9365250392213e993",
+    "physicalDeviceTested": false,
+    "checks": [
+      "Long press on empty slot does not save; short press saves to 01 and 02",
+      "Long press on occupied LOAD row opens confirmation without activating its confirm button",
+      "Cancel preserves both saves; confirm clears only 02; short press loads 01",
+      "Slot 02 can be saved again; short press on occupied SAVE row opens overwrite confirmation",
+      "Long press and confirm in SAVE clears 02; deletion persists after app restart"
+    ]
+  },
+  "physicalDeviceTested": false,
+  "baseline": {
+    "version": "0.2.4",
+    "sha256": "8f0ecd067fcfaec48eced7bcae21aab8b124e88058a11a64ba4c2c6d5f70359b",
+    "changedPackageEntries": [
+      "META-INF/CERT",
+      "META-INF/build.txt",
+      "app.js",
+      "manifest-watch.json",
+      "manifest.json",
+      "pages/index/index.js"
+    ],
+    "saveKeysAndResourcesUnchanged": true
+  }
+}
