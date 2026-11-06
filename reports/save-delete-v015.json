@@ -1,0 +1,59 @@
+{
+  "game": "星之终途",
+  "variant": "stella-band8pro",
+  "version": "0.1.5",
+  "date": "2026-11-06",
+  "package": {
+    "file": "com.codex.stella.band8pro.debug.0.1.5.rpk",
+    "version": "0.1.5",
+    "bytes": 9831057,
+    "expandedBytes": 11081789,
+    "entries": 1164,
+    "sha256": "9f9931eea9152dd05f42b77500f20ef63972a183f3cc26bb3cc7594a116c3ea2",
+    "certificateSha256": "4e8e1ee24968b0dad6d0956a7e14d848b38b22a203f39c389a45d8737bdc4585",
+    "zipCRCValid": true,
+    "outerSignatureValid": true,
+    "innerSignatureValid": true,
+    "allFileDigestsValid": true,
+    "signedFiles": 1126,
+    "watchManifestPresentAndCorrect": true,
+    "decodedImages": 1080,
+    "preservedPNGs": 312,
+    "allCommonResourcesMatchSource": true,
+    "circularRGBAIcon": true,
+    "textFontCoverageValid": true,
+    "physicalDeviceTested": false
+  },
+  "automatedTests": {
+    "passed": 31,
+    "failed": 0
+  },
+  "native": {
+    "result": "passed",
+    "version": "0.1.5",
+    "runtime": "official generic Vela Watch 5.0 simulator, 336×480",
+    "packageSha256": "9f9931eea9152dd05f42b77500f20ef63972a183f3cc26bb3cc7594a116c3ea2",
+    "physicalDeviceTested": false,
+    "checks": [
+      "Long press on empty slot does not save; short press saves to 01 and 02",
+      "Long press on occupied LOAD row opens confirmation without activating its confirm button",
+      "Cancel preserves both saves; confirm clears only 02; short press loads 01",
+      "Slot 02 can be saved again; short press on occupied SAVE row opens overwrite confirmation",
+      "Long press and confirm in SAVE clears 02; deletion persists after app restart"
+    ]
+  },
+  "physicalDeviceTested": false,
+  "baseline": {
+    "version": "0.1.4",
+    "sha256": "a05831200b73e1d9f98690dc25a579d6fe0333911f0ccb8285c82699506dc042",
+    "changedPackageEntries": [
+      "META-INF/CERT",
+      "META-INF/build.txt",
+      "app.js",
+      "manifest-watch.json",
+      "manifest.json",
+      "pages/index/index.js"
+    ],
+    "saveKeysAndResourcesUnchanged": true
+  }
+}

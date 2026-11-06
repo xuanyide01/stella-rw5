@@ -12,6 +12,110 @@ test('gallery retains all available original entries with differences grouped an
 function page(){const pending=[],timers=[],writes=[],source=fs.readFileSync(path.join(root,'src/pages/index/index.ux'),'utf8').split('<script>')[1].split('</script>')[0].replace(/^import[^\n]*\n/gm,'').replace('export default','globalThis.page=');const context=vm.createContext({...api,file:{readText:o=>o.success({text:fs.readFileSync(path.join(root,'src',o.uri),'utf8')})},storage:{get:o=>pending.push(o),set:o=>writes.push(o)},prompt:{showToast(){}},console:{log(){},error(){}},Date,setTimeout:fn=>{timers.push(fn);return timers.length;},clearTimeout(){}});vm.runInContext(source,context);const p=context.page;Object.assign(p,p.private);p.onInit();pending.shift().success('');pending.shift().success('');p.textSpeed=0;return {p,pending,timers,writes};}
 test('actual chapter UI refreshes first page repeatedly and returns directly to title',()=>{const {p}=page();for(let i=0;i<5;i++){p.openRoutes();assert.equal(p.mode,'chapters');assert.equal(p.browseRows[0].name,'01 · 遭遇与觉醒');const keys=p.browseRows.map(x=>x.key);p.nextBrowse();assert.ok(p.browseRows.every(x=>!keys.includes(x.key)));p.previousBrowse();assert.deepEqual(p.browseRows.map(x=>x.key),keys);p.closeBrowse();assert.equal(p.mode,'title');}});
 test('actual slot UI reads 30 slots sequentially and cancels late callbacks on close',()=>{const {p,pending,timers}=page();p.openSlots('load');const saved=JSON.stringify(api.createSave(api.newState(),'play',1000));for(let i=0;i<30;i++){assert.equal(pending.length,1);const r=pending.shift();assert.equal(r.key,api.slotKey(i));r.success(saved);if(i<29)timers.shift()();}assert.equal(p._slotData.length,30);assert.equal(p.loading,false);p.closeSlots();p.openSlots('load');const first=pending.shift();p.closeSlots();first.success('');assert.equal(pending.length,0);});
+function openStoredSlots(harness,role,store){
+ const {p,pending,timers}=harness;
+ p.openSlots(role);
+ while(p.loading){
+  const read=pending.shift();
+  assert.ok(read);
+  read.success(store.get(read.key)||'');
+  if(!pending.length&&p.loading)timers.shift()();
+ }
+}
+function applySlotWrite(harness,store,key){
+ const write=harness.writes.shift();
+ assert.equal(write.key,key);
+ if(write.value)store.set(key,write.value);
+ else store.delete(key);
+ write.success();
+}
+test('long press confirms deletion, stays on the same page and empties only the selected slot after reopening',()=>{
+ const h=page(),{p,writes}=h;
+ const save=JSON.stringify(api.createSave(api.newState(),'play',1000));
+ const store=new Map([[api.slotKey(28),save],[api.slotKey(29),save],[api.PROGRESS_KEY,'progress']]);
+ openStoredSlots(h,'load',store);
+ for(let i=0;i<7;i++)p.nextSlotPage();
+ p.requestSlotDelete(29);
+ assert.equal(p.slotConfirmTitle,'删除存档 30？');
+ p.selectSlot(29);
+ p.cancelSlotAction();
+ assert.equal(p.mode,'slots');
+ assert.equal(p.slotRows[1].occupied,true);
+ assert.equal(writes.length,0);
+ p.beginSlotTouch();
+ p.requestSlotDelete(29);
+ p.confirmSlotAction();
+ p.confirmSlotAction();
+ p.cancelSlotAction();
+ assert.equal(writes.length,1);
+ assert.equal(p.mode,'deleteSlot');
+ assert.equal(writes[0].value,'');
+ applySlotWrite(h,store,api.slotKey(29));
+ assert.equal(p.slotPage,7);
+ assert.equal(p.slotRows[1].meta,'空栏位');
+ assert.equal(p.slotRows[1].preview,'');
+ assert.deepEqual([...store],[[api.slotKey(28),save],[api.PROGRESS_KEY,'progress']]);
+ const fresh=page();
+ openStoredSlots(fresh,'load',store);
+ assert.equal(fresh.p._slotData[29],null);
+ fresh.p.selectSlot(28);
+ assert.equal(fresh.p.mode,'play');
+});
+test('long press on an empty save slot does not write, and a fresh tap can still save or overwrite',()=>{
+ const h=page(),{p,writes}=h,store=new Map();
+ openStoredSlots(h,'save',store);
+ p.requestSlotDelete(1);
+ p.selectSlot(1);
+ assert.equal(writes.length,0);
+ p.beginSlotTouch();
+ p.selectSlot(1);
+ applySlotWrite(h,store,api.slotKey(1));
+ openStoredSlots(h,'save',store);
+ p.selectSlot(1);
+ assert.equal(p.mode,'overwrite');
+ p.confirmSlotAction();
+ applySlotWrite(h,store,api.slotKey(1));
+ openStoredSlots(h,'save',store);
+ p.requestSlotDelete(1);
+ p.confirmSlotAction();
+ applySlotWrite(h,store,api.slotKey(1));
+ assert.equal(p.mode,'slots');
+ assert.equal(p.slotRows[1].occupied,false);
+ p.beginSlotTouch();
+ p.selectSlot(1);
+ applySlotWrite(h,store,api.slotKey(1));
+});
+test('deleting slot 01 removes old single-slot data and retries without revealing it on a write failure',()=>{
+ const save=JSON.stringify(api.createSave(api.newState(),'play',1000));
+ for(const modern of [false,true]){
+  const h=page(),{p,pending,writes}=h;
+  const store=new Map([[api.LEGACY_KEY,save]]);
+  if(modern)store.set(api.slotKey(0),save);
+  openStoredSlots(h,'load',store);
+  p.requestSlotDelete(0);
+  p.confirmSlotAction();
+  if(modern){
+   const read=pending.shift();
+   assert.equal(read.key,api.LEGACY_KEY);
+   read.success(store.get(read.key));
+  }
+  applySlotWrite(h,store,api.LEGACY_KEY);
+  if(modern){
+   writes.shift().fail();
+   assert.equal(p.mode,'deleteSlot');
+   assert.equal(p._slotData[0].legacy,undefined);
+   assert.equal(p.storageBusy,false);
+   p.confirmSlotAction();
+   pending.shift().success('');
+   applySlotWrite(h,store,api.slotKey(0));
+  }
+  assert.equal(p._slotData[0],null);
+  assert.equal(store.size,0);
+  const fresh=page();
+  openStoredSlots(fresh,'load',store);
+  assert.equal(fresh.p.slotRows[0].meta,'空栏位');
+ }
+});
 test('actual page menu skips exactly one chapter and history restores the previous frame',()=>{const {p,timers}=page();p.startNew();assert.equal(p.mode,'play');assert.equal(p.session.chapter,1);const before=api.checkpoint(p.session);p.showMenu();p.goNextChapter();for(let n=0;p._chapterSkip;n++){assert.ok(n<1000);timers.shift()();}assert.equal(p.session.chapter,2);p.goBack();assert.deepEqual(api.checkpoint(p.session),before);});
 test('invalid save locations are rejected and storage keys are independent',()=>{for(const cursor of [-1,NaN,1.5,100000])assert.throws(()=>api.restore({...api.newState(),cursor}));assert.match(api.slotKey(0),/^stella_band8pro_/);assert.match(api.PROGRESS_KEY,/^stella_band8pro_/);});
 
